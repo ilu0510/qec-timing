@@ -1,0 +1,27 @@
+{
+  "5": {
+    "draws_per_round": 37,
+    "ms_per_round": 0.2569355625018943,
+    "rng_ms_per_round": 0.01785647287490065,
+    "rng_share": 0.06949786437122342,
+    "data_draws": 25,
+    "data_share": 0.046958016467042854
+  },
+  "7": {
+    "draws_per_round": 73,
+    "ms_per_round": 0.5571476250042906,
+    "rng_ms_per_round": 0.035230338374803986,
+    "rng_share": 0.0632333995402613,
+    "data_draws": 49,
+    "data_share": 0.04244433667770964
+  },
+  "9": {
+    "draws_per_round": 121,
+    "ms_per_round": 0.6424124375007523,
+    "rng_ms_per_round": 0.0583954923746751,
+    "rng_share": 0.09090031413753055,
+    "data_draws": 81,
+    "data_share": 0.06085062351355352
+  },
+  "us_per_draw": 0.4826073749973148
+}

@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Virtual environment
+.venv/
+
+# Selene build artefacts (compiled emulator binaries / temp build dirs)
+*.ll
+*.bc
+
+# Results: ignored by default, except the Stage 4a validation outputs, which
+# are committed so nobody has to re-run them.
+results/*
+!results/.gitkeep
+!results/stage4a/
+results/stage4a/*
+!results/stage4a/*.json
+!results/stage4a/*.csv
+!results/stage4a/*.png
+!results/stage4a/*.log
+
+# Source paper: the arXiv licence (arXiv.org perpetual non-exclusive 1.0) does
+# not permit redistribution, so the PDF is not committed. See docs/paper/SOURCE.md.
+docs/paper/*
+!docs/paper/SOURCE.md

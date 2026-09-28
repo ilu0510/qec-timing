@@ -1,0 +1,13 @@
+[project]
+name = "qec-timing"
+version = "0.1.0"
+description = "Optimal syndrome-measurement timing for surface-code memories (Haug et al. 2026)"
+requires-python = ">=3.12"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-ra"
+markers = [
+    "slow: capability checks that build a Selene binary or run many shots",
+]

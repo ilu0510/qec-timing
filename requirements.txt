@@ -1,0 +1,62 @@
+# qec-timing pinned environment
+#
+# Python 3.14.0 on win_amd64. Regenerate with:
+#     .venv/Scripts/python.exe -m pip freeze
+#
+# Direct dependencies (Stage 0 brief):
+#   guppylang, selene-sim, stim, pymatching, numpy, scipy, pytest
+# Everything else below is a transitive pin, kept for reproducibility.
+# Note: guppylang requires Python >=3.12, so 3.11 cannot be used.
+annotated-types==0.8.0
+colorama==0.4.6
+contourpy==1.4.0
+cycler==0.12.1
+fonttools==4.66.0
+graphviz==0.21
+guppylang==1.1.1
+guppylang-internals==1.1.1
+hugr==0.18.6
+iniconfig==2.3.0
+Jinja2==3.1.6
+kiwisolver==1.5.1
+lark==1.3.1
+lief==0.17.6
+llvmlite==0.49.0
+MarkupSafe==3.0.3
+matplotlib==3.11.2
+mpmath==1.3.0
+networkx==3.7
+numpy==2.5.3
+packaging==26.3
+pillow==12.3.0
+pluggy==1.6.0
+pydantic==2.13.5
+pydantic-extra-types==2.11.1
+pydantic_core==2.46.5
+pydot==4.0.1
+Pygments==2.21.0
+PyMatching==2.4.0
+pyparsing==3.3.3
+pytest==9.1.1
+python-dateutil==2.9.0.post0
+pytket==2.18.4
+PyYAML==6.0.3
+qwasm==1.0.1
+scipy==1.18.1
+selene-core==0.3.2
+selene-hugr-qis-compiler==0.5.0
+selene-sim==0.3.2
+semver==3.1.0
+setuptools==84.0.0
+six==1.17.0
+stim==1.16.0
+sympy==1.14.0
+tket==0.15.9
+tket-exts==0.14.2
+tket_eccs==0.6.0
+tqdm==4.70.1
+types-tqdm==4.70.0.20260906
+typing-inspection==0.4.4
+typing_extensions==4.16.0
+wasmtime==48.0.0
+ziglang==0.16.0
