@@ -21,7 +21,6 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
-from typing import Literal
 
 from guppylang import guppy
 from guppylang.std.array import array
@@ -32,11 +31,9 @@ from guppylang.std.quantum import cx, measure, measure_array, qubit, x
 
 from ..noise.primitives import apply_data_noise, flip_record
 from ..layout import RotatedSurfaceCodeZSector
+from ..wire import WORD_BITS, EmitFormat
 
 __all__ = ["EmitFormat", "MemoryProgram", "build_memory_program", "WORD_BITS"]
-
-WORD_BITS = 64
-EmitFormat = Literal["packed", "sparse", "dense", "none"]
 
 _N = guppy.nat_var("_STAGE2_N")
 

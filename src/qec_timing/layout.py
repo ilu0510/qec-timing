@@ -1,4 +1,4 @@
-"""Rotated surface-code geometry, Z-check sector only.
+"""Rotated surface-code geometry, with legacy Z-sector and full CSS layouts.
 
 Shared by the reference model and the Guppy path so the two cannot drift apart
 (the same arrangement as ``ansatz.py``). Geometry is combinatorial, not physics:
@@ -6,8 +6,9 @@ unlike Eqs. 1-3, which are deliberately implemented twice, there is nothing here
 for an independent implementation to cross-check.
 
 Appendix A of the paper: the code is CSS, so the two Pauli sectors separate in
-the phenomenological model. We simulate only the Z-check sector, which detects
-X-type data faults; the X-check sector is equivalent after exchanging X and Z.
+the phenomenological model. The reference uses the Z-check sector, which detects
+X-type data faults. RotatedSurfaceCode adds the complementary checks for full
+Guppy extraction without changing that legacy geometry or its ordering.
 
 Data qubits sit on a ``d x d`` grid indexed by ``(row, col)``. Z-checks are the
 weight-4 plaquettes of one checkerboard sublattice plus weight-2 checks on the
@@ -25,7 +26,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from functools import cached_property
 
-__all__ = ["RotatedSurfaceCodeZSector"]
+__all__ = ["RotatedSurfaceCodeZSector", "RotatedSurfaceCode"]
 
 Coord = tuple[int, int]
 
@@ -105,3 +106,25 @@ class RotatedSurfaceCodeZSector:
         row 0 in exactly one qubit, so a logical X fault flips this parity.
         """
         return tuple((0, c) for c in range(self.d))
+
+
+@dataclass(frozen=True)
+class RotatedSurfaceCode(RotatedSurfaceCodeZSector):
+    """Full CSS patch, preserving the legacy Z-check ordering."""
+
+    @cached_property
+    def x_checks(self) -> tuple[tuple[Coord, ...], ...]:
+        checks = []
+        for r in range(self.d - 1):
+            for c in range(self.d - 1):
+                if (r + c) % 2 == 1:
+                    checks.append(((r, c), (r, c + 1), (r + 1, c), (r + 1, c + 1)))
+        for c in range(0, self.d - 1, 2):
+            checks.append(((0, c), (0, c + 1)))
+        for c in range(1, self.d - 1, 2):
+            checks.append(((self.d - 1, c), (self.d - 1, c + 1)))
+        return tuple(checks)
+
+    @cached_property
+    def logical_x_support(self) -> tuple[Coord, ...]:
+        return tuple((r, 0) for r in range(self.d))

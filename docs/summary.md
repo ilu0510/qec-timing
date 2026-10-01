@@ -36,25 +36,27 @@ produces).
 ## How to call it
 
 ```python
-from qec_timing.layout import RotatedSurfaceCodeZSector
 from qec_timing.noise import NoiseParams
 from qec_timing.schedule import constant_schedule
-from qec_timing.stub_circuit import build_memory_program
+from qec_timing.circuit import build_surface_code_program
 
-layout   = RotatedSurfaceCodeZSector(d=7)
 schedule = constant_schedule(dt=0.5, T=10.0, lam=1.0)
 params   = NoiseParams(p=0.015, lam=1.0, dt=schedule.dt, b_read=1.0)
 
-program = build_memory_program(layout, emit="packed")   # one binary per d
+program = build_surface_code_program(d=7, q_d=1, basis="Z", emit="packed")
 result  = program.run(
     p_data=params.p_data, p_read=params.p_read, dt=schedule.dt,
     n_rounds=schedule.n_rounds, base_seed=20260927, shots=1000,
 )
-events = program.detection_events(result, schedule.n_rounds)  # (rounds+1, checks)
+events = program.detection_events(result, schedule.n_rounds)  # list of shot arrays
 ```
 
 `p_data`, `p_read`, `dt`, `n_rounds` and `base_seed` are **runtime** arguments,
-so a whole sweep reuses one compiled binary. Only `d` is compile-time.
+so a whole sweep reuses one compiled binary. `d`, `q_d`, basis and output format
+are compile-time. This full circuit prepares a code state and measures both
+stabilizer types. The paper's noise and decoded detector stream still use only
+the active sector. See [surface_code.md](surface_code.md) for multiple patches,
+complementary-basis memory, preparation and decoding.
 
 **Two performance rules.** Guppy pays **~9.3 s per `run()` call**, independent of
 shot count, so size shots up front and issue **one call per configuration** --
@@ -64,9 +66,11 @@ never loop `run()` to accumulate statistics. And per-round cost is unstable to
 ## Output schema
 
 Per shot, read with `collate_tags()` (**never `as_dict()`** -- it keeps only the
-last value of a repeated tag): `det` (detection events, `n_rounds + 1`
-bit-packed blocks), `obs` (logical Z parity), plus `dt`, `p_data`, `p_read`,
-`n_rounds`, `n_checks`, `n_words`.
+last value of a repeated tag): `det` (detection events, `q_d * (n_rounds + 1)`
+bit-packed blocks), `obs` (logical parity per patch), plus `dt`, `p_data`,
+`p_read`, `n_rounds`, `n_checks`, `n_words`, `q_d` and `x_memory`. The full
+circuit also emits ideal `complementary_syn` diagnostics; these are not passed
+to the active-sector decoder.
 
 Detection events are **bit-packed into unsigned 64-bit words**, LSB first,
 ascending word order, final word zero-padded. **Full schema, bit/word order, and
@@ -123,10 +127,12 @@ d, use the local `g`, not 0.8.
   Circuit-level noise is a different model, not a parameter change.
 - **No burst / time-varying `lambda`** (Eq. 9). `lambda` is static.
 - **No adaptive timing** (Appendix F controller). `dt` is fixed within a run.
-- **No X-check sector.** Only Z-checks are simulated; the other sector is
-  equivalent under X <-> Z.
+- **One noisy Pauli sector per experiment.** The full circuit measures both
+  stabilizer types, but the paper reproduction injects only X faults and noisy
+  Z records. `basis="X"` instead tests Z faults with noisy X records.
 - **Not validated above d = 9 on the Guppy path**, and not at the paper's
   T = 200. The reference path handles those; Guppy does not, by design.
-- `stub_circuit/` is a **placeholder** for workstream #1's extraction circuit,
-  chosen to be provably equivalent to an ideal MPP. Replacing it should not
-  disturb the noise model, but re-run the Stage 4a cross-check when it lands.
+- The Stage 2–4a results above used `stub_circuit/`, retained for historical
+  reproducibility. The new `circuit/` implementation has its own preparation,
+  fault-isolation and reference-equivalence tests. The full 18-point Stage 4a
+  sweep has not been repeated with it.

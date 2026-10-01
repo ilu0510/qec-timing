@@ -23,9 +23,14 @@ overlap with that work and do not:
   `Decoder` protocol defining the seam the real decoder should implement. It is
   **a cross-check, not a decoder project**.
 
-The noise is **bit-flip (X) only**, so the memory is prepared in logical |0⟩ and
-**only the Z-check sector is exercised**. The X sector is equivalent under
-X ↔ Z and is not simulated. There is **no gate noise** — gates and ancilla
+The paper's noise is **bit-flip (X) only**, so the memory is prepared in logical
+|0⟩ and the decoded detector stream uses the Z-check sector. The new
+**`src/qec_timing/circuit/`** implementation prepares full code states and
+measures both stabilizer types on `q_d` independent patches. Start with
+`build_surface_code_program(d=5, q_d=2)`; see
+[the circuit guide](docs/surface_code.md) for usage and decoding. Optional X
+memory tests the complementary Pauli sector separately. Historical validation
+scripts still use the retained stub. There is **no gate noise** — gates and ancilla
 measurement are ideal by construction, and all faults are injected explicitly.
 
 ## Setup

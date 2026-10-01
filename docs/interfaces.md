@@ -8,6 +8,14 @@ from documentation or memory. Tests live in `tests/test_stage0_capabilities.py`.
 
 Python **3.14.0**, win_amd64. Full pins in `requirements.txt`.
 
+Full surface-code implementation was also verified on macOS arm64 with Python
+**3.14.7** in the `con_quanti` environment: Guppy 1.1.1, Selene 0.3.2,
+Stim 1.16.0, PyMatching 2.4.0 and pytest 9.1.1. New H/Z gates and the existing
+allocation, CNOT, measurement, RNG and emulator APIs were checked in the
+installed package source. The additive multiple-patch schema and preparation
+protocol are documented in [surface_code.md](surface_code.md); the legacy
+single-patch contract below is preserved.
+
 | Package | Version | Notes |
 | --- | --- | --- |
 | guppylang | 1.1.1 | requires Python `>=3.12,<4` |
