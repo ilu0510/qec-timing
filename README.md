@@ -43,7 +43,7 @@ python -m venv .venv
 .venv/Scripts/python -m pip install -r requirements.txt   # Linux/macOS: .venv/bin/python
 ```
 
-Verify — **110 tests**, a few minutes (they build and run real Selene programs):
+Run the test suite (some tests build and run real Selene programs):
 
 ```bash
 .venv/Scripts/python -m pytest
@@ -74,6 +74,27 @@ plot, and the three follow-up checks (`T_test.json`, `seed_sensitivity.json`,
 Earlier stages' outputs are in `results/stage1/` and `results/stage2/`; those
 are not tracked by git — regenerate with the scripts in `scripts/` if needed.
 
+[`results/stage5/`](results/stage5/) holds full-circuit timing validation with
+both X and Z stabilizer extraction on two independent patches, including a
+low-statistics smoke test and a d=5,7 scan at fixed storage time T=10. The
+scientific scan selected intervals Δt=1 for d=5 and Δt=0.5 for d=7 against a
+Δt=2 baseline. Fresh-shot confirmation was **inconclusive on all four patches**
+at the adjusted confidence level; timing improvement was not demonstrated.
+All full-circuit/reference 99.9% intervals overlapped, a consistency diagnostic
+rather than proof of equivalence. Gates remain ideal and noise is X-only.
+
+With the project environment active, run:
+
+```bash
+python scripts/stage5_validation.py --quick --q-d 2
+python scripts/stage5_validation.py --q-d 2
+```
+
+Each invocation saves counts, confidence intervals, confirmation summaries,
+a plot, and a log in a new UTC-timestamped directory. See
+[the Stage 5 guide](docs/surface_code.md#timing-premise-validation-stage-5)
+for configuration and interpretation.
+
 ## Layout
 
 ```
@@ -82,9 +103,10 @@ src/qec_timing/
   schedule.py      round scheduling, integer-tick clock (shared, no physics)
   ansatz.py        analytic Eqs. 5, 6, 7/D9, A3 (imports nothing else)
   noise/           Eqs. 1-3 + the Guppy noise primitives   <- the deliverable
+  circuit/         full X/Z extraction on independent logical patches
   stub_circuit/    PLACEHOLDER extraction circuit + wire format
   reference/       independent Stim/pymatching cross-check + Decoder protocol
 docs/              summary, interfaces, noise spec, performance, stage reports
 scripts/           the runs that produced results/
-tests/             110 tests
+tests/             unit, statistical, and Selene integration tests
 ```

@@ -1,0 +1,22 @@
+Results: /Users/harshank_s/qec-timing/results/stage5/20261002T080718_135847Z
+d=5 sweep dt=0.1 rounds=100 full failures=[274, 323]/1000, reference=5878/20000
+d=5 sweep dt=0.2 rounds=50 full failures=[205, 200]/1000, reference=4115/20000
+d=5 sweep dt=0.4 rounds=25 full failures=[149, 165]/1000, reference=3126/20000
+d=5 sweep dt=0.5 rounds=20 full failures=[143, 145]/1000, reference=2937/20000
+d=5 sweep dt=1 rounds=10 full failures=[139, 127]/1000, reference=2676/20000
+d=5 sweep dt=2 rounds=5 full failures=[143, 149]/1000, reference=2866/20000
+d=5 confirmation_baseline dt=2 rounds=5 full failures=[288, 279]/2000, reference=2921/20000
+d=5 confirmation_selected dt=1 rounds=10 full failures=[239, 250]/2000, reference=2619/20000
+confirmation d=5 patch=0: inconclusive; gamma=1.205020920502092 interval=[0.8766188305249785, 1.6591502297139271]
+confirmation d=5 patch=1: inconclusive; gamma=1.116 interval=[0.812765626521303, 1.533825930949799]
+d=7 sweep dt=0.1 rounds=100 full failures=[153, 177]/1000, reference=3164/20000
+d=7 sweep dt=0.2 rounds=50 full failures=[120, 106]/1000, reference=2249/20000
+d=7 sweep dt=0.4 rounds=25 full failures=[86, 92]/1000, reference=1752/20000
+d=7 sweep dt=0.5 rounds=20 full failures=[86, 75]/1000, reference=1627/20000
+d=7 sweep dt=1 rounds=10 full failures=[101, 95]/1000, reference=1787/20000
+d=7 sweep dt=2 rounds=5 full failures=[130, 118]/1000, reference=2425/20000
+d=7 confirmation_baseline dt=2 rounds=5 full failures=[245, 223]/2000, reference=2417/20000
+d=7 confirmation_selected dt=0.5 rounds=20 full failures=[181, 156]/2000, reference=1693/20000
+confirmation d=7 patch=0: inconclusive; gamma=1.3535911602209945 interval=[0.9436154480497482, 1.9481544622404143]
+confirmation d=7 patch=1: inconclusive; gamma=1.4294871794871795 interval=[0.9714721386024281, 2.11282712100219]
+Premise: not_demonstrated; reference consistency: True

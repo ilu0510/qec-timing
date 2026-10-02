@@ -102,3 +102,51 @@ the retained stub with the same seed, and compares logical failures with the
 independent reference using a 99.9% binomial interval. Large sweeps remain on
 the existing reference path. Historical Stage 4a results are not relabelled as
 full-circuit validation.
+
+## Timing-premise validation (Stage 5)
+
+`scripts/stage5_validation.py` runs this full circuit, including both X and Z
+checks on every patch. Stage 4a still uses the retained stub. From the repository
+root, with the project environment active:
+
+```bash
+python scripts/stage5_validation.py --quick --q-d 2
+python scripts/stage5_validation.py --q-d 2
+```
+
+The quick command checks execution and result storage with low statistics. The
+default scientific scan uses d=5,7, T=10, p=0.015, lambda=1, b_read=1, and
+round counts 100,50,25,20,10,5 (intervals 0.1,0.2,0.4,0.5,1,2). Total storage
+time stays fixed by setting `dt=T/n_rounds`. Defaults are 1000 full-circuit
+shots per scan point, 2000 per confirmation point, and 20000 reference shots.
+These full-circuit runs can take minutes; all counts and distances are CLI
+options. Each configuration runs once with its entire shot budget.
+
+The scan chooses the lowest mean failure probability across patches. Fresh
+samples compare that interval with a preselected baseline (`--baseline-rounds`,
+default 5, giving dt=2). Each patch is decoded and assessed separately. The
+ratio is baseline error probability / selected error probability; evidence for
+improvement requires its lower confidence bound to exceed one. Conservative
+Clopper-Pearson bounds are adjusted across all distance/patch comparisons.
+Selecting the baseline yields `baseline_selected`; a boundary selection is
+flagged and does not establish an interior optimum. Zero failures and overlapping
+ratio bounds produce an inconclusive result rather than a success claim.
+
+Every invocation creates `results/stage5/<UTC timestamp>/` containing:
+
+- `points.csv`: scan/confirmation counts, probabilities, confidence intervals,
+  per-patch logical error per time, noise probabilities, seeds, and reference
+  interval-overlap diagnostics. Reference patch index -1 denotes a single
+  independent reference experiment shared by identical patches.
+- `summary.json`: configuration, package versions, progress/completion status,
+  adjusted confirmation ratio bounds, saturation warnings, and premise result.
+- `logical_error_vs_interval.png`: measured scan probabilities divided by T,
+  with confidence intervals and the fixed baseline marked.
+- `run.log`: progress and confirmation results.
+
+Partial points and failure status are saved if execution fails. Seeds use
+disjoint shot-index ranges between configurations and confirmation jobs. Reference
+interval overlap at 99.9% is a consistency diagnostic, not proof of equivalence.
+Both stabilizer types are measured, but gates remain ideal and only the Z-memory
+Pauli sector has the paper's phenomenological noise. This validates that model
+on local Selene; it does not validate H2 physical noise or submit an Aqora job.

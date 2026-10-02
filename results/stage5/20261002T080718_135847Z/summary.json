@@ -1,0 +1,102 @@
+{
+  "configuration": {
+    "distances": [
+      5,
+      7
+    ],
+    "q_d": 2,
+    "rounds": [
+      100,
+      50,
+      25,
+      20,
+      10,
+      5
+    ],
+    "T": 10.0,
+    "p": 0.015,
+    "lam": 1.0,
+    "b_read": 1.0,
+    "shots": 1000,
+    "confirmation_shots": 2000,
+    "reference_shots": 20000,
+    "baseline_rounds": 5,
+    "seed": 20261002,
+    "confidence": 0.95,
+    "quick": false
+  },
+  "circuit": "full X/Z extraction, Z memory",
+  "noise_model": "X-only phenomenological; ideal gates and complementary X records",
+  "packages": {
+    "guppylang": "1.1.1",
+    "selene-sim": "0.3.2",
+    "stim": "1.16.0",
+    "pymatching": "2.4.0"
+  },
+  "confirmation_family_confidence": 0.95,
+  "confirmation_marginal_confidence": 0.99375,
+  "status": "completed",
+  "confirmations": [
+    {
+      "d": 5,
+      "patch": 0,
+      "baseline_dt": 2.0,
+      "selected_dt": 1.0,
+      "selected_is_scan_boundary": false,
+      "baseline_failures": 288,
+      "selected_failures": 239,
+      "shots_each": 2000,
+      "gamma": 1.205020920502092,
+      "gamma_low": 0.8766188305249785,
+      "gamma_high": 1.6591502297139271,
+      "status": "inconclusive"
+    },
+    {
+      "d": 5,
+      "patch": 1,
+      "baseline_dt": 2.0,
+      "selected_dt": 1.0,
+      "selected_is_scan_boundary": false,
+      "baseline_failures": 279,
+      "selected_failures": 250,
+      "shots_each": 2000,
+      "gamma": 1.116,
+      "gamma_low": 0.812765626521303,
+      "gamma_high": 1.533825930949799,
+      "status": "inconclusive"
+    },
+    {
+      "d": 7,
+      "patch": 0,
+      "baseline_dt": 2.0,
+      "selected_dt": 0.5,
+      "selected_is_scan_boundary": false,
+      "baseline_failures": 245,
+      "selected_failures": 181,
+      "shots_each": 2000,
+      "gamma": 1.3535911602209945,
+      "gamma_low": 0.9436154480497482,
+      "gamma_high": 1.9481544622404143,
+      "status": "inconclusive"
+    },
+    {
+      "d": 7,
+      "patch": 1,
+      "baseline_dt": 2.0,
+      "selected_dt": 0.5,
+      "selected_is_scan_boundary": false,
+      "baseline_failures": 223,
+      "selected_failures": 156,
+      "shots_each": 2000,
+      "gamma": 1.4294871794871795,
+      "gamma_low": 0.9714721386024281,
+      "gamma_high": 2.11282712100219,
+      "status": "inconclusive"
+    }
+  ],
+  "elapsed_seconds": 513.1887042919989,
+  "all_reference_intervals_overlap_999": true,
+  "saturated_points": 0,
+  "premise_result": "not_demonstrated",
+  "interpretation": "Fresh-shot confirmation for the specified phenomenological model; reference interval overlap is a diagnostic, not proof of equivalence."
+}

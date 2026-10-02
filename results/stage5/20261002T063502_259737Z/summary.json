@@ -1,0 +1,70 @@
+{
+  "configuration": {
+    "distances": [
+      3
+    ],
+    "q_d": 2,
+    "rounds": [
+      20,
+      10,
+      5
+    ],
+    "T": 2.0,
+    "p": 0.015,
+    "lam": 1.0,
+    "b_read": 1.0,
+    "shots": 32,
+    "confirmation_shots": 64,
+    "reference_shots": 512,
+    "baseline_rounds": 5,
+    "seed": 20261002,
+    "confidence": 0.95,
+    "quick": true
+  },
+  "circuit": "full X/Z extraction, Z memory",
+  "noise_model": "X-only phenomenological; ideal gates and complementary X records",
+  "packages": {
+    "guppylang": "1.1.1",
+    "selene-sim": "0.3.2",
+    "stim": "1.16.0",
+    "pymatching": "2.4.0"
+  },
+  "confirmation_family_confidence": 0.95,
+  "confirmation_marginal_confidence": 0.9875,
+  "status": "completed",
+  "confirmations": [
+    {
+      "d": 3,
+      "patch": 0,
+      "baseline_dt": 0.4,
+      "selected_dt": 0.4,
+      "selected_is_scan_boundary": true,
+      "baseline_failures": 5,
+      "selected_failures": 3,
+      "shots_each": 64,
+      "gamma": 1.6666666666666667,
+      "gamma_low": 0.11578506737796654,
+      "gamma_high": 34.72262109959478,
+      "status": "baseline_selected"
+    },
+    {
+      "d": 3,
+      "patch": 1,
+      "baseline_dt": 0.4,
+      "selected_dt": 0.4,
+      "selected_is_scan_boundary": true,
+      "baseline_failures": 5,
+      "selected_failures": 5,
+      "shots_each": 64,
+      "gamma": 1.0,
+      "gamma_low": 0.09032722653159905,
+      "gamma_high": 11.070859124077847,
+      "status": "baseline_selected"
+    }
+  ],
+  "elapsed_seconds": 16.376994291029405,
+  "all_reference_intervals_overlap_999": true,
+  "saturated_points": 0,
+  "premise_result": "not_demonstrated",
+  "interpretation": "Low-statistics smoke test only; no scientific validation claim."
+}

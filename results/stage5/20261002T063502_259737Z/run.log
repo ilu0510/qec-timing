@@ -1,0 +1,9 @@
+Results: /Users/harshank_s/qec-timing/results/stage5/20261002T063502_259737Z
+d=3 sweep dt=0.1 rounds=20 full failures=[4, 3]/32, reference=94/512
+d=3 sweep dt=0.2 rounds=10 full failures=[4, 3]/32, reference=52/512
+d=3 sweep dt=0.4 rounds=5 full failures=[2, 4]/32, reference=31/512
+d=3 confirmation_baseline dt=0.4 rounds=5 full failures=[5, 5]/64, reference=23/512
+d=3 confirmation_selected dt=0.4 rounds=5 full failures=[3, 5]/64, reference=34/512
+confirmation d=3 patch=0: baseline_selected; gamma=1.6666666666666667 interval=[0.11578506737796654, 34.72262109959478]
+confirmation d=3 patch=1: baseline_selected; gamma=1.0 interval=[0.09032722653159905, 11.070859124077847]
+Premise: not_demonstrated; reference consistency: True

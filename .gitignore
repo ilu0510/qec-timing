@@ -22,6 +22,15 @@ results/stage4a/*
 !results/stage4a/*.png
 !results/stage4a/*.log
 
+# Full-circuit timing validation: preserve per-run scientific artifacts.
+!results/stage5/
+results/stage5/**
+!results/stage5/**/
+!results/stage5/**/*.json
+!results/stage5/**/*.csv
+!results/stage5/**/*.png
+!results/stage5/**/*.log
+
 # Source paper: the arXiv licence (arXiv.org perpetual non-exclusive 1.0) does
 # not permit redistribution, so the PDF is not committed. See docs/paper/SOURCE.md.
 docs/paper/*
