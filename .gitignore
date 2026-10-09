@@ -35,3 +35,11 @@ results/stage5/**
 # not permit redistribution, so the PDF is not committed. See docs/paper/SOURCE.md.
 docs/paper/*
 !docs/paper/SOURCE.md
+
+# Stage 6b Selene-vs-twin cross-check: preserve per-run artifacts.
+!results/stage6b/
+results/stage6b/**
+!results/stage6b/**/
+!results/stage6b/**/*.json
+!results/stage6b/**/*.csv
+!results/stage6b/**/*.log

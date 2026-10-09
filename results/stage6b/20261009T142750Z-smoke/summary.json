@@ -1,0 +1,42 @@
+{
+  "stage": "6b",
+  "smoke": true,
+  "git_head": "4e836ff053936c2b9c407cce0c109db4028266c4",
+  "args": {
+    "smoke": "True",
+    "plan_only": "False",
+    "budget_min": "30.0",
+    "target_failures": "100",
+    "min_shots": "200",
+    "smoke_shots": "300",
+    "n_processes": "4",
+    "us_per_op": "None",
+    "twin_target_failures": "2000",
+    "twin_max_shots": "400000",
+    "seed": "20261009",
+    "out": "C:\\Users\\ilesh\\Desktop\\qec-timing\\results\\stage6b"
+  },
+  "noise": {
+    "p_1q": 0.0001,
+    "p_2q": 0.005,
+    "p_meas": 0.002,
+    "p_init": 0.0
+  },
+  "T": 12.0,
+  "k_A": 100,
+  "f_quad_B": 0.1,
+  "f_lin_B": 0.0,
+  "confidence": 0.99,
+  "versions": {
+    "stim": "1.16.0",
+    "PyMatching": "2.4.0",
+    "selene-sim": "0.3.2",
+    "guppylang": "1.1.1",
+    "numpy": "2.5.3"
+  },
+  "selene_seconds_total": 7.2503379000118,
+  "n_points": 1,
+  "n_pass": 1,
+  "n_fail": 0,
+  "n_skipped": 0
+}

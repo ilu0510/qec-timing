@@ -1,0 +1,8 @@
+stage6b cross-check -> C:\Users\ilesh\Desktop\qec-timing\results\stage6b\20261009T142750Z-smoke
+noise: p_1q=0.0001 p_2q=0.005 p_meas=0.002 p_init=0.0; T=12.0; A: k=100; B: f_quad=0.1 f_lin=0.0
+budget 30.0 min, target 100 failures/point, n_processes=4, cost model 8.0 us/op/shot
+[twin] B_d3_hook_safe_dt4: rounds=3 p_L=0.1222 (2444/20000) ops/shot=686 -> wanted 300 shots, ~1s [0.0s]
+plan: wanted 10s against 1530s usable -> initial shot scale 1.000
+   B_d3_hook_safe_dt4: ~300 shots
+[selene] B_d3_hook_safe_dt4: p_L=0.1333 [0.0873,0.1914] (40/300) twin 0.1222 [0.1163,0.1283] z=+0.58 | det max|z|=0.96 (crit 3.02) | 1s, 7.61 us/op, dup selene/twin=110/96 -> pass
+done: 1 pass, 0 fail, 0 skipped; Selene 7s
