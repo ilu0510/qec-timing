@@ -5,12 +5,35 @@ native noise model switched on. This plays the same role for the circuit-level
 model that the Stage 4a cross-check played for the phenomenological one. No
 sweeps beyond the 12 cross-check points.
 
-**Result: 12/12 points pass at 99%, on both the logical error rate and the
-per-round detection-event rates.** Pooled over all points, Selene's failure count
-is 0.996 +/- 0.029 times the twin's prediction. Selene time was 96 s.
+**Final result (section 9): the twin reproduces Selene at all 12 points.**
+The aggregates use only the 13 independently seeded measurements, all at about
+1000 failures or more:
 
-Run: `results/stage6b/20261009T150628Z/` (`points.csv`, `detection_rates.csv`,
-`summary.json`, `run.log`), from commit `f39abd4`. Versions: selene-sim 0.3.2,
+- p_L: chi^2 = 13.81 on 13 degrees of freedom (p = 0.39).
+- Pooled Selene/twin failure ratio: **0.985 +/- 0.008** (variant A 0.996 +/- 0.013, variant B 0.978 +/- 0.011).
+- Detection-event rates: chi^2 = 74.2 on 81 (p = 0.69).
+
+One point (B, d = 5, dt = 6) failed once, at z = -2.95. Its pre-registered
+3000-failure repeat in a fresh seed block gave z = -0.82, so the -2.95 is
+recorded as a fluctuation (section 8). Variant B shows a mild, non-significant
+tendency for Selene to sit below the twin. It is carried forward as a bound,
+not a correction (section 9).
+
+**Stage 6b is closed.**
+
+Runs, in order:
+
+| run | what |
+| --- | --- |
+| `20261009T150628Z` | 100 failures/point, 12 points |
+| `20261009T154022Z` | 1000 failures/point, 12 points |
+| `20261009T160001Z` | B d=5 dt=1, fixed seeds |
+| `20261009T161404Z` | the other 5 B points, fixed seeds |
+| `20261009T161923Z` | B d=5 dt=6 at 3000 failures, fresh seed block |
+
+The first run (`20261009T150628Z`, from commit `f39abd4`) is described in
+sections 1-5. Each run directory holds `points.csv`, `detection_rates.csv`,
+`summary.json` and `run.log`. Versions: selene-sim 0.3.2,
 guppylang 1.1.1, stim 1.16.0, PyMatching 2.4.0, numpy 2.5.3.
 
 ## 1. What was verified before running (and what changed)
@@ -268,4 +291,87 @@ abs z 1.66 against 3.36. The other 5 B points still share injection seeds with
 each other in run `20261009T154022Z`. If strictly independent aggregates are
 wanted, rerun them with
 `--target-failures 1000 --only B_d3_hook_safe_dt1 B_d3_hook_safe_dt4 B_d3_hook_safe_dt6 B_d5_hook_safe_dt4 B_d5_hook_safe_dt6`
-(about 1-3 min of Selene time, allowing for the instability).
+(about 1-3 min of Selene time, allowing for the instability). That rerun is
+`20261009T161404Z` (section 8).
+
+**The earlier 100-failure run is not independent of the 1000-failure run.** Both used
+the same per-point seeds (base 20261009, stride 1000). Selene's output depends
+only on the seeds and the global shot index (the test above), so each point's
+100-failure shots are exactly the first shots of its 1000-failure run. That
+follows from the construction; the raw records were not kept to compare
+directly. `20261009T150628Z` is therefore a subset of `20261009T154022Z`, not a
+second sample, and it is excluded from the final aggregates.
+
+## 8. Independent rerun of the B points, and the pre-registered repeat
+
+`20261009T161404Z` reran the 5 remaining B points at 1000 failures, each in its
+own 10^7 seed block (Selene seeds 80261009-130261009). **4 pass; B d=5 dt=6
+fails at z = -2.95** (Selene 0.2163 [0.2003, 0.2331], 916/4234, against twin
+0.2362). The same point had passed at z = +0.06 in `20261009T154022Z`. Its
+detection rates agree (max abs z 0.75 against 2.94), and its Selene/twin
+duplicate counts match (136 / 139).
+
+**Decision rule, fixed before the repeat:** rerun that point once at 3000
+target failures in a fresh seed block. If |z| < 3, record the failure as a
+fluctuation and close 6b. If |z| >= 3, diagnose the dephasing path at large dt
+(f_quad dt = 0.6) before any 6c work.
+
+**Repeat** (`20261009T161923Z`; `--seed 1000000000`, seed block [1.11e9, 1.12e9),
+disjoint from every earlier seed, all of which lie below 1.41e8): Selene
+0.2328 [0.2232, 0.2426] (2959/12712) against twin 0.2360 [0.2331, 0.2390],
+**z = -0.82**; detection max abs z 2.01 against 2.94; duplicates 855 / 788, with
+same/cross-process pairs 467 / 1433 (1 : 3 expected). **|z| < 3, so z = -2.95 is
+recorded as a fluctuation.**
+
+**Look-elsewhere effect.** A single point reaches |z| >= 2.95 with probability
+0.0032. Across the 12 independently seeded points that existed when it was
+observed, at least one such point appears with probability 0.037, and at least
+one 99% failure with probability 0.114. One failure at this level, which did
+not reproduce, is unremarkable.
+
+## 9. Final aggregates, independently seeded measurements only
+
+Included: the 6 A points of `20261009T154022Z` (their injection draws never
+fire, and their error-model seeds are distinct per point), plus every B
+measurement made in a disjoint seed block. That is 13 measurements of 12
+points. Both B d=5 dt=6 measurements are kept: dropping the failing one would
+bias the aggregate.
+
+| run | d | variant | dt | Selene p_L [99% CI] (fail/shots) | twin p_L [99% CI] | z | det max abs z / crit | Selene seed |
+|---|---|---|---|---|---|---|---|---|
+| 154022Z | 3 | A | 1 | 0.0838 [0.0775, 0.0905] (1025/12231) | 0.0818 [0.0799, 0.0837] | +0.79 | 2.65 / 3.36 | 20261009 |
+| 154022Z | 3 | A | 4 | 0.0738 [0.0681, 0.0798] (983/13324) | 0.0751 [0.0733, 0.0769] | -0.54 | 1.41 / 3.02 | 20262009 |
+| 154022Z | 3 | A | 12 | 0.0909 [0.0840, 0.0982] (998/10980) | 0.0911 [0.0889, 0.0932] | -0.06 | 2.15 / 2.81 | 20263009 |
+| 154022Z | 5 | A | 1 | 0.0526 [0.0485, 0.0569] (999/19010) | 0.0526 [0.0513, 0.0539] | -0.03 | 2.40 / 3.36 | 20264009 |
+| 154022Z | 5 | A | 4 | 0.0589 [0.0543, 0.0638] (988/16768) | 0.0596 [0.0582, 0.0611] | -0.38 | 0.94 / 3.02 | 20265009 |
+| 154022Z | 5 | A | 12 | 0.0890 [0.0822, 0.0962] (985/11068) | 0.0904 [0.0882, 0.0925] | -0.48 | 1.34 / 2.81 | 20266009 |
+| 160001Z | 5 | B | 1 | 0.0279 [0.0257, 0.0303] (954/34150) | 0.0293 [0.0286, 0.0300] | -1.41 | 1.66 / 3.36 | 110261009 |
+| 161404Z | 3 | B | 1 | 0.0510 [0.0470, 0.0552] (1004/19689) | 0.0508 [0.0495, 0.0521] | +0.12 | 1.65 / 3.36 | 80261009 |
+| 161404Z | 3 | B | 4 | 0.1228 [0.1136, 0.1324] (1012/8241) | 0.1213 [0.1187, 0.1240] | +0.39 | 0.58 / 3.02 | 90261009 |
+| 161404Z | 3 | B | 6 | 0.2040 [0.1892, 0.2194] (975/4780) | 0.2092 [0.2050, 0.2135] | -0.86 | 0.74 / 2.94 | 100261009 |
+| 161404Z | 5 | B | 4 | 0.1115 [0.1030, 0.1204] (984/8825) | 0.1133 [0.1108, 0.1159] | -0.52 | 1.29 / 3.02 | 120261009 |
+| 161404Z | 5 | B | 6 | 0.2163 [0.2003, 0.2331] (916/4234) | 0.2362 [0.2317, 0.2407] | -2.95 | 0.75 / 2.94 | 130261009 |
+| 161923Z | 5 | B | 6 | 0.2328 [0.2232, 0.2426] (2959/12712) | 0.2360 [0.2331, 0.2390] | -0.82 | 2.01 / 2.94 | 1110000000 |
+
+The pooled ratios below include the twin's own sampling error.
+
+| aggregate | value |
+| --- | --- |
+| p_L, all 13: sum of z^2 | **13.81 on 13 dof (p = 0.39)**; mean z -0.52; Stouffer -1.87 |
+| pooled Selene/twin failures, all 13 | **0.9854 +/- 0.0084** (14,782 vs 15,001; -1.7 sigma, p = 0.08) |
+| variant A (6) | ratio 0.996 +/- 0.013 (p = 0.78); sum of z^2 = 1.28 |
+| variant B (7) | ratio **0.978 +/- 0.011** (-2.0 sigma, p = 0.043); Stouffer -2.29 |
+| variant B without the z = -2.95 measurement (6) | ratio 0.986 +/- 0.012 (p = 0.22); Stouffer -1.27 |
+| detection rates, 81 rounds | sum of z^2 = 74.2 (p = 0.69); largest abs z 2.65 |
+
+**Reading.**
+
+- **Variant A** agrees with no visible bias, to +/-3.4% at 99%.
+- **Variant B** leans slightly low: Selene's p_L is about 2% below the twin's. This is nominally p = 0.04, but it depends on the one measurement that did not reproduce. Without it, p = 0.22, and it is not significant once the look-elsewhere effect over the variant and aggregate cuts is counted.
+- It is **carried forward as a bound, not a correction**: at 99% the twin over-predicts variant B's p_L by at most about 5%.
+- There is one known variant-B-specific approximation in the twin: the preparation corrections are modelled by their per-qubit average, dropping an O(p_1q^2) correlation. Its expected size is far below 2%, so it is not offered as the explanation.
+- For Stage 6c, a common 2-5% scale error in R would not move dt\*, which depends on the shape of R(dt). It would only enter if it varied systematically with dt. A and B together show no dt trend in z.
+
+**Stage 6b is closed.** The twin, with `order="hook_safe"`, `native_charging=True` and
+(for Selene comparisons) `mirror_guppy_program=True`, is the validated model
+for Stage 6c.

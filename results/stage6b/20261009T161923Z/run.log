@@ -1,0 +1,8 @@
+stage6b cross-check -> C:\Users\ilesh\Desktop\qec-timing\results\stage6b\20261009T161923Z
+noise: p_1q=0.0001 p_2q=0.005 p_meas=0.002 p_init=0.0; T=12.0; A: k=100; B: f_quad=0.1 f_lin=0.0
+budget 30.0 min, target 3000 failures/point, n_processes=4, cost model 0.54 us/op + 2700.0 us/shot (single process) + 3.4s/point; twin target 30000 failures
+[twin] B_d5_hook_safe_dt6: rounds=2 p_L=0.2360 (33042/140000) ops/shot=1566 -> wanted 12712 shots, ~15s [1.1s]
+plan: wanted 18s against 1530s usable -> initial shot scale 1.000
+   B_d5_hook_safe_dt6: ~12712 shots
+[selene] B_d5_hook_safe_dt6: p_L=0.2328 [0.2232,0.2426] (2959/12712) twin 0.2360 [0.2331,0.2390] z=-0.82 | det max|z|=2.01 (crit 2.94) | 16s, 2.45 us/op, dup selene/twin=855/788 (pairs same/cross process 467/1433) -> pass
+done: 1 pass, 0 fail, 0 skipped; Selene 23s
