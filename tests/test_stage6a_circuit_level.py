@@ -120,7 +120,7 @@ def t_is_rec(inst: stim.CircuitInstruction) -> bool:
 
 
 def test_native_charging_annotation():
-    """H -> 2 composed ops; CX -> 1q noise on both qubits either side + p2."""
+    """H -> 2 composed ops; CX -> target 1+2, control 0+1 single-qubit ops, + p2."""
     p1, p2 = 1e-3, 4e-3
     noise = CircuitNoise(BitFlip(0.0), p1=p1, p2=p2)
     plain = build_constant_interval_memory(3, 1.0, 1.0, noise, basis="X").circuit
@@ -138,11 +138,11 @@ def test_native_charging_annotation():
     # Plain: DEPOLARIZE1(p1) on every H target, DEPOLARIZE2(p2) on every CX pair.
     assert targets(plain, "DEPOLARIZE1") == targets(plain, "DEPOLARIZE1", p1) == n_h
     assert targets(plain, "DEPOLARIZE2", p2) == 2 * n_cx
-    # Native: H noise is two composed ops; each CX has 1q noise before and after
-    # on both qubits, plus the p2 channel.
-    p_h = compose_depolarize1(p1, H_NATIVE_1Q_OPS)
-    assert targets(native, "DEPOLARIZE1", p_h) == n_h
-    assert targets(native, "DEPOLARIZE1", p1) == 2 * 2 * n_cx
+    # Native (measured in Stage 6b): H is two composed ops; each CX charges its
+    # target 1 op before and 2 after, its control 1 after, plus the p2 channel.
+    p2ops = compose_depolarize1(p1, 2)
+    assert targets(native, "DEPOLARIZE1", p2ops) == n_h + n_cx   # H, and target-after
+    assert targets(native, "DEPOLARIZE1", p1) == 2 * n_cx         # target-before, control-after
     assert targets(native, "DEPOLARIZE2", p2) == 2 * n_cx
 
 

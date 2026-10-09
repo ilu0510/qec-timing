@@ -45,33 +45,33 @@ test to Stage 4a); the caller passes the per-round probability.
 Native charging
 ---------------
 Selene charges ``p_1q``/``p_2q`` per COMPILED native op, not per source gate.
-The counts below were measured in the team's notebooks (they are not derived
-here, and ``config/*.yaml`` is not in this repo, so the numbers are copied from
-the committed notebook outputs):
+The counts below were MEASURED in Stage 6b from the error model's own input
+(``CircuitExtractor.get_error_model_input()``, selene-sim 0.3.2,
+``DepolarizingErrorModel`` on the Stim backend, one noiseless traced shot of
+``program.py``), and confirmed with the model's ``gates_1q`` / ``gates_2q``
+counters: every ``Rxy`` and every ``Rz`` is charged ``p_1q`` (``DEPOLARIZE1``),
+every ``Rzz`` ``p_2q`` (``DEPOLARIZE2``). See ``docs/stage6b_report.md``.
 
-* ``notebooks/03_noise_channel_audit.ipynb`` section 2: every ``h`` costs
-  **2** charged single-qubit ops (all seven X-basis points fit
-  ``accumulate(n + 4, 2p/3)`` within 1.6 sigma for two ``h``; k=1 misses by
-  33 sigma, k=3 by 21 sigma). Section 1: one idle op ``phased_x(q, 0, 0)`` is
-  **1** charged op, and ``p_1q`` is exactly ``DEPOLARIZE1``.
-* ``notebooks/04c_extraction_cost_p2q.ipynb`` section 2 (``CircuitExtractor``
-  read-back of the error-model input): every CNOT compiles to **one** ``Rzz``
-  (charged ``p_2q``) and **2** single-qubit ops on each data qubit it touches.
-  Only data qubits were read back there (``c1[:nd]``); the same 2 is assumed for
-  the ancilla end of each CNOT.
+* ``h``: ``Rxy`` + ``Rz`` = **2** ops (agrees with notebook 03, section 2).
+* ``cx(control, target)``: target ``Rxy``; ``Rzz``; control ``Rz``; target
+  ``Rxy``, ``Rz``. So the TARGET gets 1 op before and 2 after, the CONTROL 0
+  before and 1 after -- regardless of which of them is the ancilla.
+  (Stage 6a assumed 1 before + 1 after on both, from notebook 04c's "2 per data
+  qubit", which is the average over the control and target roles. Wrong per
+  qubit; corrected here.)
+* ``x``, ``z`` (preparation corrections, injected flips): **1** op each.
+* ``phased_x(q, 0, 0)`` (variant A idle op): **1** op (notebook 03, section 1).
 
 With ``native_charging=True`` the builder therefore emits:
 
-* ``H``: one ``DEPOLARIZE1(p_2ops)`` with ``p_2ops = compose(p1, 2)``. Exact,
-  because the single-qubit depolarizing channel is invariant under conjugation
-  by any single-qubit Clifford, so the two native ops' noise can be moved past
-  the native rotations and merged.
-* ``CX``: ``DEPOLARIZE1(p1)`` on both qubits, ``CX``, ``DEPOLARIZE2(p2)``,
-  ``DEPOLARIZE1(p1)`` on both qubits. Both depolarizing channels are invariant
-  under local Cliffords, so the only thing that matters is how many of the 2
-  single-qubit ops sit before vs after the entangling ``Rzz``. The notebooks do
-  not record that split; ``CX_1Q_OPS_BEFORE = 1`` (one each side) is an
-  ASSUMPTION, to be checked against Selene's instruction log in 6b.
+* ``H``: one ``DEPOLARIZE1(compose(p1, 2))``. Exact, because the single-qubit
+  depolarizing channel is invariant under conjugation by any single-qubit
+  Clifford, so a native op's noise can be moved past the native rotations and
+  merged with its neighbours.
+* ``CX``: ``DEPOLARIZE1(p1)`` on the target; ``CX``; ``DEPOLARIZE2(p2)``;
+  ``DEPOLARIZE1(p1)`` on the control and ``DEPOLARIZE1(compose(p1, 2))`` on the
+  target. Both depolarizing channels are invariant under local Cliffords, so
+  only the before/after split relative to the entangling ``Rzz`` matters.
 * idle (variant A): unchanged, each idle op is already one native op.
 """
 
@@ -86,8 +86,9 @@ import stim
 __all__ = [
     "BitFlip",
     "CircuitNoise",
-    "CX_1Q_OPS_BEFORE",
-    "CX_1Q_OPS_PER_QUBIT",
+    "CX_CONTROL_1Q_OPS",
+    "CX_TARGET_1Q_OPS",
+    "PAULI_GATE_1Q_OPS",
     "DephasingH2",
     "DepolarizingKOps",
     "H_NATIVE_1Q_OPS",
@@ -100,11 +101,12 @@ __all__ = [
 
 Basis = Literal["Z", "X"]
 
-# Native op counts (sources in the module docstring).
-H_NATIVE_1Q_OPS = 2          # notebook 03, section 2
-IDLE_OP_NATIVE_1Q_OPS = 1    # notebook 03, section 1: phased_x(q, 0, 0)
-CX_1Q_OPS_PER_QUBIT = 2      # notebook 04c, section 2
-CX_1Q_OPS_BEFORE = 1         # assumption: split of the 2 around the Rzz
+# Native op counts, measured from Selene's error-model input (module docstring).
+H_NATIVE_1Q_OPS = 2          # h -> Rxy, Rz
+IDLE_OP_NATIVE_1Q_OPS = 1    # phased_x(q, 0, 0) -> Rxy
+PAULI_GATE_1Q_OPS = 1        # x -> Rxy, z -> Rz
+CX_TARGET_1Q_OPS = (1, 2)    # (before, after) the Rzz
+CX_CONTROL_1Q_OPS = (0, 1)   # (before, after) the Rzz
 
 _MAX_DEPOLARIZE1 = 0.75
 

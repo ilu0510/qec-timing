@@ -32,15 +32,35 @@ Detector order is round -> check, ``(n_rounds + 1) * n_checks`` in total,
 identical to the Guppy program's ``det`` stream for one patch and to the
 Stage-1 reference.
 
-Two deliberate differences from ``program.py``:
+By default, two deliberate differences from ``program.py``:
 
 * ``program.py`` conjugates its per-round X-noise by ``H`` in an X memory, to
   turn the phenomenological X channel into Z faults. Those ``H`` gates are a
   noise-injection device, not part of extraction, and are not emitted here: the
   idle channel acts directly.
 * The preparation corrections are conditional gates; Stim cannot charge noise
-  on a gate that only sometimes runs, so they are noiseless here. They act only
-  on the complementary sector.
+  on a gate that only sometimes runs, so they are noiseless here.
+
+``mirror_guppy_program=True`` (requires ``native_charging=True``; used for the
+Stage 6b cross-check against Selene) instead charges what Selene charges when
+it runs ``program.py`` with its RNG noise injection standing in for the idle
+channel:
+
+* X memory: the per-round ``H`` wrapper on every data qubit, each ``H`` charged
+  2 native ops, emitted literally (``H``, noise, ``H``).
+* The injected flip is an ``x`` gate that only runs when the RNG fires, and is
+  then charged 1 native op. Per data qubit that is exactly the Pauli channel
+  "flip w.p. p, then DEPOLARIZE1(p1)", i.e. ``PAULI_CHANNEL_1`` with the flip
+  Pauli (X, in the frame inside the ``H`` wrapper) at ``p (1 - p1)`` and each
+  other Pauli at ``p p1 / 3``. The idle channel must be one the injection can
+  produce: ``DephasingH2`` in an X memory (X inside the wrapper == Z) or
+  ``BitFlip`` in a Z memory. ``DepolarizingKOps`` is not injected; its ops are
+  real native ops and are charged as such already.
+* Each preparation correction runs with probability 1/2 (the projected sign is
+  uniformly random) and is then charged 1 native op on each qubit it touches.
+  Modelled by its marginal: ``DEPOLARIZE1(compose(p1 / 2, c_i))`` on data qubit
+  ``i``, where ``c_i`` is the number of corrections touching it. The joint
+  correlation within one correction is dropped; that is O(p1^2).
 
 ``program.py`` is imported for its geometry helpers only; building a circuit
 here never compiles or runs a Guppy program.
@@ -62,11 +82,14 @@ from ..reference.decoder import PyMatchingDecoder
 from ..reference.sampler import LogicalErrorEstimate, clopper_pearson
 from ..schedule import RoundSchedule, constant_schedule
 from .noise import (
-    CX_1Q_OPS_BEFORE,
-    CX_1Q_OPS_PER_QUBIT,
+    CX_CONTROL_1Q_OPS,
+    CX_TARGET_1Q_OPS,
     H_NATIVE_1Q_OPS,
+    PAULI_GATE_1Q_OPS,
     Basis,
+    BitFlip,
     CircuitNoise,
+    DephasingH2,
     IdleChannel,
     ReadoutNoise,
     compose_depolarize1,
@@ -102,11 +125,11 @@ class _Emitter:
         self.n_meas = 0
         p1 = noise.p1
         self.p_h = compose_depolarize1(p1, H_NATIVE_1Q_OPS) if native_charging else p1
-        self.p_cx_before = compose_depolarize1(p1, CX_1Q_OPS_BEFORE) if native_charging else 0.0
-        self.p_cx_after = (
-            compose_depolarize1(p1, CX_1Q_OPS_PER_QUBIT - CX_1Q_OPS_BEFORE)
-            if native_charging else 0.0
-        )
+        def ops(n: int) -> float:
+            return compose_depolarize1(p1, n) if native_charging else 0.0
+
+        self.p_target_before, self.p_target_after = map(ops, CX_TARGET_1Q_OPS)
+        self.p_control_before, self.p_control_after = map(ops, CX_CONTROL_1Q_OPS)
 
     def _noise(self, name: str, targets: list[int], p: float) -> None:
         if p > 0.0:
@@ -121,10 +144,12 @@ class _Emitter:
         self._noise("DEPOLARIZE1", qs, self.p_h)
 
     def cx(self, control: int, target: int) -> None:
-        self._noise("DEPOLARIZE1", [control, target], self.p_cx_before)
+        self._noise("DEPOLARIZE1", [control], self.p_control_before)
+        self._noise("DEPOLARIZE1", [target], self.p_target_before)
         self.c.append("CX", [control, target])
         self._noise("DEPOLARIZE2", [control, target], self.noise.p2)
-        self._noise("DEPOLARIZE1", [control, target], self.p_cx_after)
+        self._noise("DEPOLARIZE1", [control], self.p_control_after)
+        self._noise("DEPOLARIZE1", [target], self.p_target_after)
 
     def measure(self, qs: list[int]) -> list[int]:
         """Measure; returns the absolute record indices."""
@@ -155,6 +180,7 @@ class CircuitLevelMemory:
     noise: CircuitNoise
     native_charging: bool
     order: Order
+    mirror_guppy_program: bool
     circuit: stim.Circuit
     """Decoding circuit: readout as ``M(p)`` (``p_avg`` if asymmetric)."""
     sampling_circuit: stim.Circuit
@@ -269,6 +295,7 @@ def build_circuit_level_memory(
     basis: Basis | None = None,
     native_charging: bool = False,
     order: Order = "row_major",
+    mirror_guppy_program: bool = False,
     with_coords: bool = True,
 ) -> CircuitLevelMemory:
     """Build the memory for any schedule (constant or variable ``dt``).
@@ -277,20 +304,34 @@ def build_circuit_level_memory(
     ``basis`` defaults to the idle channel's natural basis (Z for depolarizing
     and bit-flip, X for dephasing, which a Z memory cannot see). ``order`` is
     the CNOT order within each check, as in ``build_surface_code_program``.
+    ``mirror_guppy_program`` adds the charged noise of program.py's injection
+    machinery (module docstring); it needs ``native_charging=True``.
     """
     if basis is None:
         basis = noise.idle.default_basis
     if basis not in ("Z", "X"):
         raise ValueError("basis must be 'Z' or 'X'")
+    if mirror_guppy_program:
+        _check_mirror(noise, basis, native_charging)
     layout = RotatedSurfaceCode(d)
     readout = noise.readout
     decode_p = readout.p01 if readout.is_symmetric else readout.average
-    circuit = _build(layout, schedule, noise, basis, native_charging, order,
-                     with_coords, decode_p)
-    sampling = circuit if readout.is_symmetric else _build(
-        layout, schedule, noise, basis, native_charging, order, with_coords, 0.0)
+    args = (layout, schedule, noise, basis, native_charging, order,
+            mirror_guppy_program, with_coords)
+    circuit = _build(*args, decode_p)
+    sampling = circuit if readout.is_symmetric else _build(*args, 0.0)
     return CircuitLevelMemory(d, basis, schedule, noise, native_charging, order,
-                              circuit, sampling)
+                              mirror_guppy_program, circuit, sampling)
+
+
+def _check_mirror(noise: CircuitNoise, basis: Basis, native_charging: bool) -> None:
+    if not native_charging:
+        raise ValueError("mirror_guppy_program requires native_charging=True")
+    idle = noise.idle
+    if isinstance(idle, DephasingH2) and basis != "X":
+        raise ValueError("program.py injects Z faults only in an X memory")
+    if isinstance(idle, BitFlip) and basis != "Z":
+        raise ValueError("program.py injects X faults only in a Z memory")
 
 
 def build_constant_interval_memory(d: int, dt: float, T: float, noise: CircuitNoise,
@@ -306,8 +347,8 @@ def _check_centre(support) -> tuple[float, float]:
 
 
 def _build(layout: RotatedSurfaceCode, schedule: RoundSchedule, noise: CircuitNoise,
-           basis: Basis, native_charging: bool, order: Order, with_coords: bool,
-           p_meas: float) -> stim.Circuit:
+           basis: Basis, native_charging: bool, order: Order, mirror: bool,
+           with_coords: bool, p_meas: float) -> stim.Circuit:
     x_memory = basis == "X"
     n_data, n_checks = layout.n_data, layout.n_checks
     data = list(range(n_data))
@@ -354,12 +395,30 @@ def _build(layout: RotatedSurfaceCode, schedule: RoundSchedule, noise: CircuitNo
         for i in range(n_data):
             if corrections[ci * n_data + i]:
                 e.c.append(fix, [e.rec(prep[ci]), i])
+    if mirror:
+        # Each correction runs w.p. 1/2, then costs PAULI_GATE_1Q_OPS native ops.
+        half = compose_depolarize1(noise.p1, PAULI_GATE_1Q_OPS) / 2.0
+        by_p: dict[float, list[int]] = {}
+        for i in range(n_data):
+            c_i = sum(corrections[ci * n_data + i] for ci in range(n_checks))
+            if c_i:
+                by_p.setdefault(compose_depolarize1(half, c_i), []).append(i)
+        for p, qs in sorted(by_p.items()):
+            e._noise("DEPOLARIZE1", qs, p)
     e.c.append("TICK")
 
     # Rounds.
     prev: list[int] | None = None
+    injected = mirror and isinstance(noise.idle, (DephasingH2, BitFlip))
     for j, dt in enumerate(schedule.intervals):
-        noise.idle.append(e.c, data, dt)
+        if injected:
+            if x_memory:
+                e.h(data)
+            _append_injection(e, data, noise.idle.probability(dt), noise.p1)
+            if x_memory:
+                e.h(data)
+        else:
+            noise.idle.append(e.c, data, dt)
         e.c.append("TICK")
         syn = []
         for ci in range(n_checks):
@@ -384,6 +443,18 @@ def _build(layout: RotatedSurfaceCode, schedule: RoundSchedule, noise: CircuitNo
                    [*centres[ci], schedule.n_rounds] if with_coords else [])
     e.c.append("OBSERVABLE_INCLUDE", [e.rec(final[i]) for i in logical], 0)
     return e.c
+
+
+def _append_injection(e: _Emitter, data: list[int], p: float, p1: float) -> None:
+    """program.py's injected flip (X in its frame) plus the charge on the x gate."""
+    if p <= 0.0:
+        return
+    q = compose_depolarize1(p1, PAULI_GATE_1Q_OPS)
+    px, other = p * (1.0 - q), p * q / 3.0
+    if other > 0.0:
+        e.c.append("PAULI_CHANNEL_1", data, [px, other, other])
+    else:
+        e.c.append("X_ERROR", data, px)
 
 
 # ---------------------------------------------------------------------------
