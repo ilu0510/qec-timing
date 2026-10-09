@@ -370,7 +370,11 @@ The pooled ratios below include the twin's own sampling error.
 - **Variant B** leans slightly low: Selene's p_L is about 2% below the twin's. This is nominally p = 0.04, but it depends on the one measurement that did not reproduce. Without it, p = 0.22, and it is not significant once the look-elsewhere effect over the variant and aggregate cuts is counted.
 - It is **carried forward as a bound, not a correction**: at 99% the twin over-predicts variant B's p_L by at most about 5%.
 - There is one known variant-B-specific approximation in the twin: the preparation corrections are modelled by their per-qubit average, dropping an O(p_1q^2) correlation. Its expected size is far below 2%, so it is not offered as the explanation.
-- For Stage 6c, a common 2-5% scale error in R would not move dt\*, which depends on the shape of R(dt). It would only enter if it varied systematically with dt. A and B together show no dt trend in z.
+- For Stage 6c, a common 2-5% scale error in R would not move dt\*, which depends on the shape of R(dt). It would only matter if it varied with dt, so I tested that.
+  - Per-dt Selene/twin ratios, A: 1.012 / 0.986 / 0.992 (+/-0.023) at dt = 1 / 4 / 12.
+  - Per-dt ratios, B: 0.979 / 0.998 (+/-0.023) / 0.970 (+/-0.014) at dt = 1 / 4 / 6.
+  - A weighted linear fit of B's ratio against dt gives a slope of -0.0025 +/- 0.0054 per unit dt (z = -0.47); without the z = -2.95 measurement, +0.0008 +/- 0.0056.
+  - So no dt dependence is resolved. At 99%, a B trend of up to about 1.4% per unit dt over dt = 1-6 cannot be excluded. This limit is what to carry into 6c.
 
 **Stage 6b is closed.** The twin, with `order="hook_safe"`, `native_charging=True` and
 (for Selene comparisons) `mirror_guppy_program=True`, is the validated model
