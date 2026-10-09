@@ -16,7 +16,9 @@ from typing import Literal
 import numpy as np
 from guppylang import guppy
 from guppylang.std.array import array
+from guppylang.std.angles import angle
 from guppylang.std.builtins import comptime, nat, output
+from guppylang.std.qsystem import phased_x
 from guppylang.std.qsystem.random import RNG
 from guppylang.std.qsystem.utils import get_current_shot
 from guppylang.std.quantum import cx, h, measure, measure_array, qubit, x, z
@@ -143,12 +145,19 @@ class SurfaceCodeProgram:
 
 def build_surface_code_program(d: int, q_d: int = 1, *, basis: Basis = "Z",
                                emit: EmitFormat = "packed",
-                               order: Order = "row_major") -> SurfaceCodeProgram:
+                               order: Order = "row_major",
+                               idle_ops: int = 0) -> SurfaceCodeProgram:
     """Compile-time distance, patch count and memory basis; runtime noise/timing.
 
     order selects the CNOT order within each check (see ordering.py):
     "row_major" (default) is the layout's own order, unchanged; "hook_safe"
     puts each check type's hook error perpendicular to the logical it damages.
+
+    idle_ops (default 0: no gates added) inserts that many phased_x(q, 0, 0)
+    ops on every data qubit each round, after the noise injection and before
+    extraction. Each is one native op, so under a Selene error model it is a
+    charged idle op (Stage 6b variant A). It is compile-time, so idle_ops =
+    k * dt must be a whole number per program.
 
     det blocks are round -> patch -> check, including the final closure.
     obs is repeated in patch order. complementary_syn packs ideal opposite
@@ -163,6 +172,8 @@ def build_surface_code_program(d: int, q_d: int = 1, *, basis: Basis = "Z",
         raise ValueError("basis must be Z or X")
     if emit not in ("packed", "sparse", "dense", "none"):
         raise ValueError("unknown emit format")
+    if not isinstance(idle_ops, int) or isinstance(idle_ops, bool) or idle_ops < 0:
+        raise ValueError("idle_ops must be a non-negative integer")
     x_memory = basis == "X"
     n_data, n_checks = layout.n_data, layout.n_checks
     total_data, total_checks = q_d * n_data, q_d * n_checks
@@ -257,6 +268,10 @@ def build_surface_code_program(d: int, q_d: int = 1, *, basis: Basis = "Z",
                     z(data[idx])
                 else:
                     x(data[idx])
+            if comptime(idle_ops > 0):
+                for _ in range(comptime(idle_ops)):
+                    for i in range(comptime(total_data)):
+                        phased_x(data[i], angle(0.0), angle(0.0))
             for patch in range(comptime(q_d)):
                 det = array(False for _ in range(comptime(n_checks)))
                 other = array(False for _ in range(comptime(n_checks)))
