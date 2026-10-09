@@ -1,0 +1,41 @@
+stage6b cross-check -> C:\Users\ilesh\Desktop\qec-timing\results\stage6b\20261009T150628Z
+noise: p_1q=0.0001 p_2q=0.005 p_meas=0.002 p_init=0.0; T=12.0; A: k=100; B: f_quad=0.1 f_lin=0.0
+budget 30.0 min, target 100 failures/point, n_processes=4, cost model 8.0 us/op/shot
+[twin] A_d3_hook_safe_dt1: rounds=12 p_L=0.0837 (3348/40000) ops/shot=12726 -> wanted 1195 shots, ~41s [0.0s]
+[twin] A_d3_hook_safe_dt4: rounds=3 p_L=0.0763 (3053/40000) ops/shot=11358 -> wanted 1311 shots, ~40s [0.0s]
+[twin] A_d3_hook_safe_dt12: rounds=1 p_L=0.0919 (3674/40000) ops/shot=11054 -> wanted 1089 shots, ~32s [0.0s]
+[twin] A_d5_hook_safe_dt1: rounds=12 p_L=0.0531 (2123/40000) ops/shot=36274 -> wanted 1885 shots, ~182s [0.2s]
+[twin] A_d5_hook_safe_dt4: rounds=3 p_L=0.0587 (2348/40000) ops/shot=31810 -> wanted 1704 shots, ~145s [0.1s]
+[twin] A_d5_hook_safe_dt12: rounds=1 p_L=0.0914 (3654/40000) ops/shot=30818 -> wanted 1095 shots, ~90s [0.1s]
+[twin] B_d3_hook_safe_dt1: rounds=12 p_L=0.0549 (2195/40000) ops/shot=2378 -> wanted 1823 shots, ~12s [0.0s]
+[twin] B_d3_hook_safe_dt4: rounds=3 p_L=0.1237 (2475/20000) ops/shot=686 -> wanted 809 shots, ~1s [0.0s]
+[twin] B_d3_hook_safe_dt6: rounds=2 p_L=0.2092 (4185/20000) ops/shot=498 -> wanted 478 shots, ~1s [0.0s]
+[twin] B_d5_hook_safe_dt1: rounds=12 p_L=0.0290 (2321/80000) ops/shot=7526 -> wanted 3447 shots, ~69s [0.3s]
+[twin] B_d5_hook_safe_dt4: rounds=3 p_L=0.1119 (2238/20000) ops/shot=2162 -> wanted 894 shots, ~5s [0.1s]
+[twin] B_d5_hook_safe_dt6: rounds=2 p_L=0.2330 (4660/20000) ops/shot=1566 -> wanted 430 shots, ~2s [0.1s]
+plan: wanted 731s against 1530s usable -> initial shot scale 1.000
+   A_d3_hook_safe_dt1: ~1195 shots
+   A_d3_hook_safe_dt4: ~1311 shots
+   A_d3_hook_safe_dt12: ~1089 shots
+   A_d5_hook_safe_dt1: ~1885 shots
+   A_d5_hook_safe_dt4: ~1704 shots
+   A_d5_hook_safe_dt12: ~1095 shots
+   B_d3_hook_safe_dt1: ~1823 shots
+   B_d3_hook_safe_dt4: ~809 shots
+   B_d3_hook_safe_dt6: ~478 shots
+   B_d5_hook_safe_dt1: ~3447 shots
+   B_d5_hook_safe_dt4: ~894 shots
+   B_d5_hook_safe_dt6: ~430 shots
+[selene] A_d3_hook_safe_dt1: p_L=0.0778 [0.0592,0.0999] (93/1195) twin 0.0837 [0.0802,0.0873] z=-0.72 | det max|z|=1.62 (crit 3.36) | 4s, 0.75 us/op, dup selene/twin=214/201 -> pass
+[selene] A_d3_hook_safe_dt4: p_L=0.0824 [0.0640,0.1039] (108/1311) twin 0.0763 [0.0729,0.0798] z=+0.81 | det max|z|=2.16 (crit 3.02) | 3s, 0.63 us/op, dup selene/twin=608/588 -> pass
+[selene] A_d3_hook_safe_dt12: p_L=0.1001 [0.0780,0.1258] (109/1089) twin 0.0919 [0.0882,0.0956] z=+0.93 | det max|z|=1.15 (crit 2.81) | 3s, 0.64 us/op, dup selene/twin=531/570 -> pass
+[selene] A_d5_hook_safe_dt1: p_L=0.0562 [0.0434,0.0713] (106/1885) twin 0.0531 [0.0502,0.0560] z=+0.60 | det max|z|=2.85 (crit 3.36) | 15s, 0.67 us/op, dup selene/twin=0/0 -> pass
+[selene] A_d5_hook_safe_dt4: p_L=0.0569 [0.0434,0.0730] (97/1704) twin 0.0587 [0.0557,0.0618] z=-0.31 | det max|z|=1.61 (crit 3.02) | 10s, 0.57 us/op, dup selene/twin=152/169 -> pass
+[selene] A_d5_hook_safe_dt12: p_L=0.0995 [0.0776,0.1251] (109/1095) twin 0.0914 [0.0877,0.0951] z=+0.93 | det max|z|=0.96 (crit 2.81) | 7s, 0.59 us/op, dup selene/twin=390/337 -> pass
+[selene] B_d3_hook_safe_dt1: p_L=0.0499 [0.0377,0.0646] (91/1823) twin 0.0549 [0.0520,0.0579] z=-0.91 | det max|z|=1.75 (crit 3.36) | 2s, 1.63 us/op, dup selene/twin=434/493 -> pass
+[selene] B_d3_hook_safe_dt4: p_L=0.1162 [0.0889,0.1481] (94/809) twin 0.1237 [0.1178,0.1299] z=-0.64 | det max|z|=1.26 (crit 3.02) | 1s, 3.13 us/op, dup selene/twin=365/365 -> pass
+[selene] B_d3_hook_safe_dt6: p_L=0.2238 [0.1767,0.2767] (107/478) twin 0.2092 [0.2019,0.2168] z=+0.78 | det max|z|=1.01 (crit 2.94) | 0s, 5.60 us/op, dup selene/twin=252/269 -> pass
+[selene] B_d5_hook_safe_dt1: p_L=0.0264 [0.0199,0.0343] (91/3447) twin 0.0290 [0.0275,0.0306] z=-0.90 | det max|z|=1.36 (crit 3.36) | 9s, 0.99 us/op, dup selene/twin=13/18 -> pass
+[selene] B_d5_hook_safe_dt4: p_L=0.1174 [0.0913,0.1478] (105/894) twin 0.1119 [0.1062,0.1178] z=+0.51 | det max|z|=0.77 (crit 3.02) | 1s, 1.42 us/op, dup selene/twin=20/29 -> pass
+[selene] B_d5_hook_safe_dt6: p_L=0.2000 [0.1527,0.2541] (86/430) twin 0.2330 [0.2253,0.2408] z=-1.60 | det max|z|=0.56 (crit 2.94) | 0s, 2.16 us/op, dup selene/twin=2/1 -> pass
+done: 12 pass, 0 fail, 0 skipped; Selene 96s

@@ -32,6 +32,8 @@ truncated mid-run.
 Usage:
     python scripts/stage6b_crosscheck.py                # full cross-check
     python scripts/stage6b_crosscheck.py --smoke        # one small point
+    python scripts/stage6b_crosscheck.py --target-failures 1000   # tighter rerun
+    python scripts/stage6b_crosscheck.py --plan-only    # shot/time plan only
 Results: results/stage6b/<UTC timestamp>[-smoke]/
 """
 
@@ -70,7 +72,7 @@ T = 12.0
 K_A = 100                    # variant A: idle ops per data qubit per unit time
 FQ_B, FL_B = 0.1, 0.0        # variant B: p_z(dt) = sin^2(0.05 dt)
 CONF = 0.99
-SECONDS_PER_RUN = 9.3        # fixed run() cost (docs/performance.md)
+SECONDS_PER_RUN = 3.4        # per point outside run(): build + decode (measured, 6b run)
 
 
 @dataclass(frozen=True)
@@ -222,11 +224,16 @@ def main(argv=None) -> int:
     ap.add_argument("--min-shots", type=int, default=200)
     ap.add_argument("--smoke-shots", type=int, default=300)
     ap.add_argument("--n-processes", type=int, default=4)
-    ap.add_argument("--us-per-op", type=float, default=None,
-                    help="Selene cost model, microseconds per native op per shot "
-                         "(single process); default from the smoke calibration")
-    ap.add_argument("--twin-target-failures", type=int, default=2_000)
-    ap.add_argument("--twin-max-shots", type=int, default=400_000)
+    ap.add_argument("--us-per-op", type=float, default=US_PER_OP_DEFAULT,
+                    help="Selene cost model: microseconds per charged native op per "
+                         "shot, single-process equivalent")
+    ap.add_argument("--us-per-shot", type=float, default=US_PER_SHOT_DEFAULT,
+                    help="Selene cost model: fixed microseconds per shot, single-process "
+                         "equivalent (RNG draws, emission, shot setup)")
+    ap.add_argument("--twin-target-failures", type=int, default=None,
+                    help="twin failures per point (default 10x --target-failures, "
+                         "at least 2000), so the twin's error stays negligible")
+    ap.add_argument("--twin-max-shots", type=int, default=2_000_000)
     ap.add_argument("--seed", type=int, default=20261009)
     ap.add_argument("--out", type=Path, default=ROOT / "results" / "stage6b")
     args = ap.parse_args(argv)
@@ -243,12 +250,19 @@ def main(argv=None) -> int:
         log_file.flush()
 
     points = [SMOKE] if args.smoke else POINTS
-    us_per_op = args.us_per_op if args.us_per_op is not None else US_PER_OP_DEFAULT
+    if args.twin_target_failures is None:
+        args.twin_target_failures = max(2_000, 10 * args.target_failures)
+
+    def sec_per_shot(ops: int, slowdown: float) -> float:
+        us = ops * args.us_per_op + args.us_per_shot
+        return us * 1e-6 * slowdown / parallel_speedup(args.n_processes)
     log(f"stage6b cross-check -> {out}")
     log(f"noise: p_1q={P1} p_2q={P2} p_meas={PM} p_init={PINIT}; T={T}; "
         f"A: k={K_A}; B: f_quad={FQ_B} f_lin={FL_B}")
     log(f"budget {args.budget_min} min, target {args.target_failures} failures/point, "
-        f"n_processes={args.n_processes}, cost model {us_per_op} us/op/shot")
+        f"n_processes={args.n_processes}, cost model {args.us_per_op} us/op + "
+        f"{args.us_per_shot} us/shot (single process) + {SECONDS_PER_RUN}s/point; "
+        f"twin target {args.twin_target_failures} failures")
 
     # 1. Twin first (cheap): p_L prediction, shot sizing, reference statistics.
     plan = []
@@ -267,7 +281,7 @@ def main(argv=None) -> int:
                          tcounts=tcounts, tfirst=tfirst, ops=ops, wanted=wanted))
         log(f"[twin] {pt.label}: rounds={twin.n_rounds} p_L={p_twin:.4f} ({tf}/{ts}) "
             f"ops/shot={ops} -> wanted {wanted} shots, "
-            f"~{wanted * sec_per_shot(ops, us_per_op, args.n_processes):.0f}s "
+            f"~{wanted * sec_per_shot(ops, 1.0):.0f}s "
             f"[{time.perf_counter() - t0:.1f}s]")
 
     # 2. Budget. Shots for each run are fixed just before it, from the remaining
@@ -275,14 +289,14 @@ def main(argv=None) -> int:
     budget = args.budget_min * 60.0
     usable = USABLE_FRACTION * budget
 
-    def sized(remaining_plan, spent, us):
-        need = sum(SECONDS_PER_RUN + q["wanted"] * sec_per_shot(q["ops"], us, args.n_processes)
+    def sized(remaining_plan, spent, slowdown):
+        need = sum(SECONDS_PER_RUN + q["wanted"] * sec_per_shot(q["ops"], slowdown)
                    for q in remaining_plan)
         scale = min(1.0, max(0.0, usable - spent) / need) if need else 1.0
         return scale
 
-    scale0 = sized(plan, 0.0, us_per_op)
-    log(f"plan: wanted {sum(SECONDS_PER_RUN + q['wanted'] * sec_per_shot(q['ops'], us_per_op, args.n_processes) for q in plan):.0f}s "
+    scale0 = sized(plan, 0.0, 1.0)
+    log(f"plan: wanted {sum(SECONDS_PER_RUN + q['wanted'] * sec_per_shot(q['ops'], 1.0) for q in plan):.0f}s "
         f"against {usable:.0f}s usable -> initial shot scale {scale0:.3f}")
     for q in plan:
         log(f"   {q['pt'].label}: ~{max(args.min_shots, int(q['wanted'] * scale0))} shots")
@@ -294,16 +308,17 @@ def main(argv=None) -> int:
     rows, det_rows = [], []
     job_start = time.perf_counter()
     z_crit = norm.ppf(1 - (1 - CONF) / 2)
-    us_seen = us_per_op
+    slowdown = 1.0   # worst measured/predicted run() time so far, never below 1
     for idx, p in enumerate(plan):
         pt, twin = p["pt"], p["twin"]
         spent = time.perf_counter() - job_start
         if args.smoke:
             shots = p["wanted"]
         else:
-            scale = sized(plan[idx:], spent, us_seen)
+            scale = sized(plan[idx:], spent, slowdown)
             shots = max(args.min_shots, int(p["wanted"] * scale))
-        predicted = SECONDS_PER_RUN + shots * sec_per_shot(p["ops"], us_seen, args.n_processes)
+        run_predicted = shots * sec_per_shot(p["ops"], slowdown)
+        predicted = SECONDS_PER_RUN + run_predicted
         if not args.smoke and spent + predicted > budget:
             log(f"[skip] {pt.label}: predicted {predicted:.0f}s, {budget - spent:.0f}s left")
             rows.append(dict(asdict(pt), status="skipped_budget"))
@@ -321,7 +336,7 @@ def main(argv=None) -> int:
         det_ok = bool(np.all(np.abs(zr) < z_crit_rounds))
         pl_ok = abs(z_pl) < z_crit
         measured_us = elapsed / ss / p["ops"] * 1e6 * parallel_speedup(args.n_processes)
-        us_seen = max(us_seen, measured_us)
+        slowdown = max(slowdown, elapsed / max(ss * sec_per_shot(p["ops"], 1.0), 1e-9))
         rows.append(dict(
             asdict(pt), basis=pt.basis, k=pt.k, idle_ops=pt.idle_ops, p_data=pt.p_data,
             n_rounds=twin.n_rounds, T_actual=twin.schedule.total_time,
@@ -375,7 +390,14 @@ def main(argv=None) -> int:
 
 # Cost model. Calibrated by the smoke run (B, d=3, 300 shots, 4 processes:
 # 6.3 us/op single-process equivalent); 8 leaves room for the ~3x instability.
-US_PER_OP_DEFAULT = 8.0
+# Cost model, fitted to the 12-point run results/stage6b/20261009T150628Z/ (4
+# processes, every point within ~25%): run() wall = shots * (0.181 us * ops +
+# 0.90 ms). Single-process equivalent (x3, parallel_speedup): 0.54 us per op,
+# 2.7 ms per shot. The smoke-era 8 us/op was ~15x high per op and missed the
+# per-shot term. Instability (~3x, CLAUDE.md) is absorbed at run time: each
+# run's measured/predicted ratio raises `slowdown` for the remaining points.
+US_PER_OP_DEFAULT = 0.54
+US_PER_SHOT_DEFAULT = 2700.0
 USABLE_FRACTION = 0.85
 
 
@@ -383,9 +405,6 @@ def parallel_speedup(n_processes: int) -> float:
     """interfaces.md: ~3x at 4 processes, flat beyond."""
     return max(1.0, min(n_processes, 4) * 0.75)
 
-
-def sec_per_shot(ops: int, us_per_op: float, n_processes: int) -> float:
-    return ops * us_per_op * 1e-6 / parallel_speedup(n_processes)
 
 if __name__ == "__main__":
     sys.exit(main())
