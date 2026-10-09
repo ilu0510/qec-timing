@@ -1,0 +1,2 @@
+R,R_hi,R_lo,T_actual,basis,batches,d,dt,failures,kind,label,n_rounds,p_L,p_L_hi,p_L_lo,pilot_eps,planned_cost_s,planned_rounds,planned_shots,rounds_factor,saturated,seconds,seed_block_end,seed_block_start,shots,slot,status,variant
+0.004568237840561768,0.004900689963772311,0.004256363908276388,48.0,Z,1,3,2.0,1020,grid,A_d3_grid99_dt2,24,0.17751479289940827,0.1876445313406745,0.16771362805229972,0.010652780959157074,0.18922029745392502,24,5746,1,False,0.15658120001899078,70000000,69900000,5746,99,done,A

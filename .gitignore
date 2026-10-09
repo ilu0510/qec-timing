@@ -43,3 +43,12 @@ results/stage6b/**
 !results/stage6b/**/*.json
 !results/stage6b/**/*.csv
 !results/stage6b/**/*.log
+
+# Stage 6c dt sweeps on the twin: preserve per-run artifacts.
+!results/stage6c/
+results/stage6c/**
+!results/stage6c/**/
+!results/stage6c/**/*.json
+!results/stage6c/**/*.csv
+!results/stage6c/**/*.log
+!results/stage6c/**/*.png
