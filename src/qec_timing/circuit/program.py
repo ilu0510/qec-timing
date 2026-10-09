@@ -24,6 +24,7 @@ from guppylang.std.quantum import cx, h, measure, measure_array, qubit, x, z
 from ..layout import RotatedSurfaceCode
 from ..noise.primitives import apply_data_noise, flip_record
 from ..wire import WORD_BITS, EmitFormat, unpack_detection_events
+from .ordering import Order, order_supports
 
 _N = guppy.nat_var("_SURFACE_N")
 Basis = Literal["Z", "X"]
@@ -141,8 +142,13 @@ class SurfaceCodeProgram:
 
 
 def build_surface_code_program(d: int, q_d: int = 1, *, basis: Basis = "Z",
-                               emit: EmitFormat = "packed") -> SurfaceCodeProgram:
+                               emit: EmitFormat = "packed",
+                               order: Order = "row_major") -> SurfaceCodeProgram:
     """Compile-time distance, patch count and memory basis; runtime noise/timing.
+
+    order selects the CNOT order within each check (see ordering.py):
+    "row_major" (default) is the layout's own order, unchanged; "hook_safe"
+    puts each check type's hook error perpendicular to the logical it damages.
 
     det blocks are round -> patch -> check, including the final closure.
     obs is repeated in patch order. complementary_syn packs ideal opposite
@@ -162,7 +168,9 @@ def build_surface_code_program(d: int, q_d: int = 1, *, basis: Basis = "Z",
     total_data, total_checks = q_d * n_data, q_d * n_checks
     active = layout.x_checks if x_memory else layout.z_checks
     complementary = layout.z_checks if x_memory else layout.x_checks
-    supports, other_supports = _supports(layout, active), _supports(layout, complementary)
+    active_type, other_type = ("X", "Z") if x_memory else ("Z", "X")
+    supports = _supports(layout, order_supports(layout, active, active_type, order))
+    other_supports = _supports(layout, order_supports(layout, complementary, other_type, order))
     corrections = _preparation_corrections(layout, complementary)
     logical = [layout.data_index[q] for q in
                (layout.logical_x_support if x_memory else layout.logical_z_support)]
