@@ -186,24 +186,68 @@ def busy_duplicates(events: np.ndarray) -> int:
     return len(busy) - len({row.tobytes() for row in busy})
 
 
-def run_selene(pt: Point, twin, decoder, shots: int, seed: int, n_processes: int):
+def duplicate_pairs_by_process(records: np.ndarray, n_processes: int) -> tuple[int, int]:
+    """Pairs of shots with identical full records (all rounds + obs, >= 1 event).
+
+    Selene interleaves shots across processes: global shot k runs on process
+    k % n_processes, and results come back in global shot order. Returns
+    (same-process pairs, cross-process pairs). Random coincidences split about
+    1 : (n_processes - 1); a seed shared between processes shows up as an
+    excess of cross-process pairs.
+    """
+    flat = np.asarray(records, dtype=np.bool_).reshape(len(records), -1)
+    groups: dict[bytes, list[int]] = {}
+    for k, row in enumerate(flat):
+        if row.any():
+            groups.setdefault(row.tobytes(), []).append(k % n_processes)
+    same = cross = 0
+    for procs in groups.values():
+        if len(procs) < 2:
+            continue
+        counts = np.bincount(procs, minlength=n_processes)
+        pairs = len(procs) * (len(procs) - 1) // 2
+        within = int(sum(c * (c - 1) // 2 for c in counts))
+        same += within
+        cross += pairs - within
+    return same, cross
+
+
+# Seed allocation. Point i owns the block [seed + i*STRIDE, seed + (i+1)*STRIDE):
+# error-model/simulator seed = block start, program injection RNG seeds =
+# block start + 1 + shot (one per shot, program.py), twin seeds at the block's
+# end. Stage 6b's first two runs used a stride of 1000, so injection seeds of
+# different points overlapped whenever a point had > 1000 shots.
+SEED_STRIDE = 10_000_000
+
+
+def point_seeds(seed: int, index: int, shots: int) -> dict[str, int]:
+    if not 0 < shots < SEED_STRIDE - 10:
+        raise ValueError(f"shots={shots} does not fit a seed block of {SEED_STRIDE}")
+    start = seed + index * SEED_STRIDE
+    return {"selene": start, "base_seed": start + 1,
+            "twin": start + SEED_STRIDE - 3, "twin_dup": start + SEED_STRIDE - 2}
+
+
+def run_selene(pt: Point, twin, decoder, shots: int, seeds: dict, n_processes: int):
     prog = build_surface_code_program(pt.d, basis=pt.basis, order=pt.order,
                                       idle_ops=pt.idle_ops)
     from selene_sim import DepolarizingErrorModel
     em = DepolarizingErrorModel(p_1q=P1, p_2q=P2, p_meas=PM, p_init=PINIT)
-    inst = prog.emulator().with_error_model(em).with_shots(shots).with_seed(seed)
+    inst = prog.emulator().with_error_model(em).with_shots(shots).with_seed(seeds["selene"])
     if n_processes > 1:
         inst = inst.with_n_processes(n_processes)
     t0 = time.perf_counter()
     result = inst.run(p_data=pt.p_data, p_read=0.0, dt=pt.dt, n_rounds=twin.n_rounds,
-                      base_seed=seed + 1, inject_round=-1, inject_qubit=-1, inject_patch=0)
+                      base_seed=seeds["base_seed"], inject_round=-1, inject_qubit=-1,
+                      inject_patch=0)
     elapsed = time.perf_counter() - t0
     pred = prog.decode(result, twin.n_rounds, decoder)[:, 0]
     obs = prog.observables(result)[:, 0]
     failures = int(np.count_nonzero(pred != obs))
     events = np.asarray(prog.detection_events(result, twin.n_rounds))
     counts = events.reshape(len(events), twin.n_rounds + 1, -1).sum(axis=2).astype(np.int64)
-    return failures, len(events), counts, elapsed, events
+    records = np.concatenate([events.reshape(len(events), -1), obs[:, None]], axis=1)
+    return failures, len(events), counts, elapsed, records
 
 
 def git_head() -> str:
@@ -235,6 +279,9 @@ def main(argv=None) -> int:
                          "at least 2000), so the twin's error stays negligible")
     ap.add_argument("--twin-max-shots", type=int, default=2_000_000)
     ap.add_argument("--seed", type=int, default=20261009)
+    ap.add_argument("--only", nargs="+", default=None, metavar="LABEL",
+                    help="run only these point labels (e.g. B_d5_hook_safe_dt1); "
+                         "each keeps its index, hence its seed block")
     ap.add_argument("--out", type=Path, default=ROOT / "results" / "stage6b")
     args = ap.parse_args(argv)
 
@@ -249,7 +296,12 @@ def main(argv=None) -> int:
         log_file.write(msg + "\n")
         log_file.flush()
 
-    points = [SMOKE] if args.smoke else POINTS
+    indexed = [(0, SMOKE)] if args.smoke else list(enumerate(POINTS))
+    if args.only:
+        unknown = set(args.only) - {pt.label for _, pt in indexed}
+        if unknown:
+            raise SystemExit(f"unknown point label(s): {sorted(unknown)}")
+        indexed = [(i, pt) for i, pt in indexed if pt.label in args.only]
     if args.twin_target_failures is None:
         args.twin_target_failures = max(2_000, 10 * args.target_failures)
 
@@ -266,18 +318,18 @@ def main(argv=None) -> int:
 
     # 1. Twin first (cheap): p_L prediction, shot sizing, reference statistics.
     plan = []
-    for i, pt in enumerate(points):
-        seed = args.seed + 1000 * i
+    for i, pt in indexed:
+        seeds = point_seeds(args.seed, i, args.twin_max_shots)
         twin = build_twin(pt)
         dec = twin.decoder()
         t0 = time.perf_counter()
-        tf, ts, tcounts, tfirst = run_twin(pt, twin, dec, seed + 2,
+        tf, ts, tcounts, tfirst = run_twin(pt, twin, dec, seeds["twin"],
                                            args.twin_target_failures, args.twin_max_shots)
         p_twin = tf / ts
         ops = native_op_count(pt, twin)
         wanted = args.smoke_shots if args.smoke else max(
             args.min_shots, math.ceil(args.target_failures / max(p_twin, 1e-4)))
-        plan.append(dict(pt=pt, seed=seed, twin=twin, dec=dec, tf=tf, ts=ts,
+        plan.append(dict(pt=pt, seeds=seeds, twin=twin, dec=dec, tf=tf, ts=ts,
                          tcounts=tcounts, tfirst=tfirst, ops=ops, wanted=wanted))
         log(f"[twin] {pt.label}: rounds={twin.n_rounds} p_L={p_twin:.4f} ({tf}/{ts}) "
             f"ops/shot={ops} -> wanted {wanted} shots, "
@@ -323,11 +375,16 @@ def main(argv=None) -> int:
             log(f"[skip] {pt.label}: predicted {predicted:.0f}s, {budget - spent:.0f}s left")
             rows.append(dict(asdict(pt), status="skipped_budget"))
             continue
-        sf, ss, scounts, elapsed, sevents = run_selene(pt, twin, p["dec"], shots,
-                                                       p["seed"], args.n_processes)
+        point_seeds(args.seed, 0, shots)   # the Selene shots must fit the block too
+        sf, ss, scounts, elapsed, srecords = run_selene(pt, twin, p["dec"], shots,
+                                                        p["seeds"], args.n_processes)
         tf, ts, tcounts = p["tf"], p["ts"], p["tcounts"]
-        dups = busy_duplicates(sevents)
-        twin_dups = busy_duplicates(p["tfirst"][:ss])
+        # Duplicates: Selene vs an independent twin sample of EXACTLY ss shots
+        # (earlier runs compared against at most 20,000 twin shots).
+        tdets, tobs = twin.sample(ss, seed=p["seeds"]["twin_dup"])
+        trecords = np.concatenate([np.asarray(tdets, bool), np.asarray(tobs, bool)], axis=1)
+        dups, twin_dups = busy_duplicates(srecords), busy_duplicates(trecords)
+        same_pairs, cross_pairs = duplicate_pairs_by_process(srecords, args.n_processes)
         z_pl = two_proportion_z(sf, ss, tf, ts)
         s_lo, s_hi = clopper_pearson(sf, ss, CONF)
         t_lo, t_hi = clopper_pearson(tf, ts, CONF)
@@ -347,7 +404,10 @@ def main(argv=None) -> int:
             det_max_abs_z=float(np.max(np.abs(zr))), det_z_crit=float(z_crit_rounds),
             pass_p_L=pl_ok, pass_detection=det_ok, status="pass" if pl_ok and det_ok else "FAIL",
             selene_seconds=elapsed, ops_per_shot=p["ops"], measured_us_per_op=measured_us,
-            duplicate_busy_shots_selene=dups, duplicate_busy_shots_twin_same_n=twin_dups))
+            duplicate_busy_shots_selene=dups, duplicate_busy_shots_twin_same_n=twin_dups,
+            duplicate_pairs_same_process=same_pairs, duplicate_pairs_cross_process=cross_pairs,
+            selene_seed=p["seeds"]["selene"], base_seed=p["seeds"]["base_seed"],
+            injection_seed_range=f"[{p['seeds']['base_seed']}, {p['seeds']['base_seed'] + ss})"))
         for r in range(zr.size):
             det_rows.append(dict(label=pt.label, round=r,
                                  selene_mean=float(scounts[:, r].mean()),
@@ -356,6 +416,7 @@ def main(argv=None) -> int:
             f"twin {tf / ts:.4f} [{t_lo:.4f},{t_hi:.4f}] z={z_pl:+.2f} | "
             f"det max|z|={np.max(np.abs(zr)):.2f} (crit {z_crit_rounds:.2f}) | "
             f"{elapsed:.0f}s, {measured_us:.2f} us/op, dup selene/twin={dups}/{twin_dups} "
+            f"(pairs same/cross process {same_pairs}/{cross_pairs}) "
             f"-> {rows[-1]['status']}")
 
     # 4. Write results.

@@ -1,0 +1,44 @@
+{
+  "stage": "6b",
+  "smoke": false,
+  "git_head": "68643c0ec81c17c857a77fb0c8c65a8ee357d29f",
+  "args": {
+    "smoke": "False",
+    "plan_only": "False",
+    "budget_min": "30.0",
+    "target_failures": "1000",
+    "min_shots": "200",
+    "smoke_shots": "300",
+    "n_processes": "4",
+    "us_per_op": "0.54",
+    "us_per_shot": "2700.0",
+    "twin_target_failures": "10000",
+    "twin_max_shots": "2000000",
+    "seed": "20261009",
+    "only": "['B_d5_hook_safe_dt1']",
+    "out": "C:\\Users\\ilesh\\Desktop\\qec-timing\\results\\stage6b"
+  },
+  "noise": {
+    "p_1q": 0.0001,
+    "p_2q": 0.005,
+    "p_meas": 0.002,
+    "p_init": 0.0
+  },
+  "T": 12.0,
+  "k_A": 100,
+  "f_quad_B": 0.1,
+  "f_lin_B": 0.0,
+  "confidence": 0.99,
+  "versions": {
+    "stim": "1.16.0",
+    "PyMatching": "2.4.0",
+    "selene-sim": "0.3.2",
+    "guppylang": "1.1.1",
+    "numpy": "2.5.3"
+  },
+  "selene_seconds_total": 431.4800277999602,
+  "n_points": 1,
+  "n_pass": 1,
+  "n_fail": 0,
+  "n_skipped": 0
+}

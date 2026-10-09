@@ -158,8 +158,114 @@ remaining points' shots to fit the budget.
   - non-integer `k dt`;
   - d > 5.
   These are tested on the twin alone in 6a.
-- **Rerun at 1000 failures per point** (same 12 points, 30 min budget; planned at about 10 min of Selene time):
-  `.venv\Scripts\python.exe scripts\stage6b_crosscheck.py --target-failures 1000`.
-  The twin's sample now defaults to 10x the Selene target (at least 2,000), so
-  its error stays negligible.
+- The 1000-failure rerun is in section 6, and the seed investigation it prompted is in section 7.
 - Stage 6c (the dt\* scaling study under circuit-level noise) has not been started.
+
+## 6. Rerun at 1000 failures per point
+
+Run: `results/stage6b/20261009T154022Z/`, from commit `68643c0`
+(`--target-failures 1000`; the twin sampled at least 10,000 failures per point).
+**12/12 pass.** Selene time was 689 s (627 s inside `run()`, the rest build and
+decode), against a planned 607 s.
+
+| d | variant | order | dt | k | rounds | Selene p_L [99% CI] (fail/shots) | twin p_L [99% CI] | z (p_L) | det max abs z / crit | Selene s |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 3 | A depolarizing_kops (Z) | hook_safe | 1 | 100 | 12 | 0.0838 [0.0775, 0.0905] (1025/12231) | 0.0818 [0.0799, 0.0837] | +0.79 | 2.65 / 3.36 | 41 |
+| 3 | A depolarizing_kops (Z) | hook_safe | 4 | 100 | 3 | 0.0738 [0.0681, 0.0798] (983/13324) | 0.0751 [0.0733, 0.0769] | -0.54 | 1.41 / 3.02 | 34 |
+| 3 | A depolarizing_kops (Z) | hook_safe | 12 | 100 | 1 | 0.0909 [0.0840, 0.0982] (998/10980) | 0.0911 [0.0889, 0.0932] | -0.06 | 2.15 / 2.81 | 26 |
+| 5 | A depolarizing_kops (Z) | hook_safe | 1 | 100 | 12 | 0.0526 [0.0485, 0.0569] (999/19010) | 0.0526 [0.0513, 0.0539] | -0.03 | 2.40 / 3.36 | 160 |
+| 5 | A depolarizing_kops (Z) | hook_safe | 4 | 100 | 3 | 0.0589 [0.0543, 0.0638] (988/16768) | 0.0596 [0.0582, 0.0611] | -0.38 | 0.94 / 3.02 | 109 |
+| 5 | A depolarizing_kops (Z) | hook_safe | 12 | 100 | 1 | 0.0890 [0.0822, 0.0962] (985/11068) | 0.0904 [0.0882, 0.0925] | -0.48 | 1.34 / 2.81 | 68 |
+| 3 | B dephasing_h2 (X) | hook_safe | 1 | - | 12 | 0.0505 [0.0464, 0.0547] (955/18929) | 0.0528 [0.0515, 0.0541] | -1.40 | 2.23 / 3.36 | 26 |
+| 3 | B dephasing_h2 (X) | hook_safe | 4 | - | 3 | 0.1236 [0.1144, 0.1333] (1010/8171) | 0.1224 [0.1197, 0.1251] | +0.32 | 2.46 / 3.02 | 4 |
+| 3 | B dephasing_h2 (X) | hook_safe | 6 | - | 2 | 0.2118 [0.1967, 0.2274] (1012/4779) | 0.2093 [0.2050, 0.2136] | +0.40 | 1.00 / 2.94 | 2 |
+| 5 | B dephasing_h2 (X) | hook_safe | 1 | - | 12 | 0.0293 [0.0270, 0.0318] (1007/34332) | 0.0291 [0.0284, 0.0299] | +0.21 | 1.89 / 3.36 | 140 |
+| 5 | B dephasing_h2 (X) | hook_safe | 4 | - | 3 | 0.1153 [0.1068, 0.1243] (1030/8931) | 0.1120 [0.1094, 0.1146] | +0.96 | 1.04 / 3.02 | 11 |
+| 5 | B dephasing_h2 (X) | hook_safe | 6 | - | 2 | 0.2332 [0.2168, 0.2503] (1002/4296) | 0.2328 [0.2284, 0.2373] | +0.06 | 1.01 / 2.94 | 4 |
+| 5 | B, rerun with fixed seeds (section 7) | hook_safe | 1 | - | 12 | 0.0279 [0.0257, 0.0303] (954/34150) | 0.0293 [0.0286, 0.0300] | -1.41 | 1.66 / 3.36 | 416 |
+
+| aggregate | as recorded | with B d=5 dt=1 replaced by its rerun |
+| --- | --- | --- |
+| p_L z, sum of z^2 (12 dof) | 4.49 (p = 0.97) | 6.44 (p = 0.89) |
+| mean z | -0.01 | -0.15 |
+| Stouffer z, A / B | -0.28 / +0.23 | -0.28 / -0.43 |
+| pooled Selene / twin failures | **0.9994 +/- 0.0091** (11,994 vs 12,001) | 0.9950 +/- 0.0091 |
+| detection rates, 78 rounds | sum of z^2 = 85.7 (p = 0.26); largest abs z 2.65 (threshold 3.36); mean Selene/twin ratio 0.9993 | |
+
+At 1000 failures each point resolves the twin to roughly +/-8% (99% interval
+half-width). The pooled ratio now bounds any common bias to **about +/-2.3% at
+99%**. The low chi^2 as recorded (P(chi^2 <= 4.49) = 0.03) is not significant
+after the rerun substitution (0.11). Section 7 explains why the B points of
+this run are also not fully independent of each other.
+
+**Cost.** 689 s against the planned 607 s (+13%) confirms the refit cost
+model. The isolated rerun of B d=5 dt=1 then took 416 s against 140 s for
+the identical configuration in this run. That is the ~3x run-to-run
+instability noted in CLAUDE.md, seen directly. The script's slowdown factor
+exists for this reason.
+
+## 7. Duplicate-pattern anomaly at B d=5 dt=1, and the seed allocation
+
+**Observation.** In the 1000-failure run, B d=5 dt=1 had 680 repeated
+detection patterns among Selene's shots against 287 in the twin. Every other
+point matched. It was also the largest run (34,332 shots).
+
+**Within a point, no shot reuses a seed.** This was checked three ways:
+
+1. *Shot partitioning* (installed `selene_sim/instance.py`, `run_shots`):
+   process j of 4 runs the global shots k with k = j (mod 4) (offset j,
+   increment 4), so the four shot sets are disjoint. `program.py` seeds its
+   injection RNG with `base_seed + k`. For this point that is base_seed
+   20270010 (old run) or 110261010 (rerun), giving seeds {base + j, base + j + 4, ...}
+   for process j: four disjoint residue classes.
+2. *Seeding is by global shot index* (new slow test
+   `test_selene_seeds_by_global_shot_index_across_processes`). A 4-process run
+   reproduces the 1-process run exactly, shot for shot. That covers the
+   injection RNG draws and the error model's noise, whose per-shot seeds come
+   from compiled Selene code. Reported shot indices are exactly 0..N-1.
+3. *Full records split by process* (rerun, all rounds + observable, shots with
+   at least one detection event): identical-record pairs split **376 same-process
+   / 1,177 cross-process**. Random coincidences over 4 interleaved processes
+   should split 1 : 3, i.e. 388 : 1,165. Shared seeds between processes would
+   show up as an excess of cross-process pairs; there is none.
+
+**Where the extra duplicates came from: the comparison, not Selene.** The
+twin's duplicate count was taken from its first sampling batch, which is capped
+at 20,000 shots. So 34,332 Selene shots were compared with 20,000 twin shots.
+Repeated patterns grow roughly with the square of the shot count (a birthday
+count), so the scaled expectation is about 287 x (34,332 / 20,000)^2, roughly
+850. This was the only point with more than 20,000 shots, which is why only it
+looked anomalous. The script now draws an independent twin sample of exactly
+the Selene shot count. On the rerun: **Selene 735, twin 719** at 34,150 shots
+each.
+
+**A real seed problem found on the way: overlap ACROSS points.** Seeds were
+allocated as `seed + 1000 i` for point i, with `base_seed = seed + 1000 i + 1`.
+Every point had more than 1,000 shots, so the injection-seed ranges of
+different points overlapped. All 66 pairs overlapped in the 1000-failure run;
+for example, B d=3 dt=1 and B d=5 dt=1 shared 15,929 seeds. Consequences:
+
+- Variant A is unaffected. It runs with `p_data = p_read = 0`, so its RNG draws never inject anything.
+- The error model's seeds were always distinct per point (`with_seed(seed + 1000 i)`).
+- Each point's own pass/fail verdict is valid, since its shots are all distinct.
+- The 15 B-B pairs shared injection streams. Their injected-dephasing faults were therefore correlated between points: for the same d, a dt=1 fault (u < p_z(1)) implies a dt=4 fault (u < p_z(4)) on paired shots. The cross-point aggregates in sections 3 and 6 assumed independent B points, so their B parts are slightly optimistic. The verdict does not depend on them.
+- It also contradicts CLAUDE.md's rule of distinct base_seeds per batch.
+
+**Fix** (`scripts/stage6b_crosscheck.py`): point i now owns the seed block
+`[seed + i * 10^7, seed + (i + 1) * 10^7)`. The Selene seed sits at the block
+start, the injection seeds run from start + 1 + shot, and the twin seeds sit at
+the block end. A point whose shots would not fit is refused. `--only LABEL`
+reruns a single point within its own block. Tests are in
+`tests/test_stage6b_seeds.py` (8 passing): disjoint ranges for all 12 points
+up to the full block, refusal of oversized runs, the pair-counting helper, and
+the Selene global-shot seeding test above.
+
+**Rerun of B d=5 dt=1 only, with the fixed allocation**
+(`results/stage6b/20261009T160001Z/`; Selene seed 110261009, injection seeds
+[110261010, 110295160), now disjoint from every other point): **pass**, with
+p_L 0.0279 [0.0257, 0.0303] against twin 0.0293, z = -1.41; detection max
+abs z 1.66 against 3.36. The other 5 B points still share injection seeds with
+each other in run `20261009T154022Z`. If strictly independent aggregates are
+wanted, rerun them with
+`--target-failures 1000 --only B_d3_hook_safe_dt1 B_d3_hook_safe_dt4 B_d3_hook_safe_dt6 B_d5_hook_safe_dt4 B_d5_hook_safe_dt6`
+(about 1-3 min of Selene time, allowing for the instability).
