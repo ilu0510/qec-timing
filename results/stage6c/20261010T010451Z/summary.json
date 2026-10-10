@@ -1,0 +1,54 @@
+{
+  "stage": "6c",
+  "git_head": "bcd164fb914e6faa5cfe4f905b84c421268a4428",
+  "args": {
+    "plan_only": "False",
+    "smoke": "False",
+    "analyse": "None",
+    "distances": "[3, 5, 7, 9, 11]",
+    "budget_min": "45.0",
+    "seed": "60000000",
+    "out": "C:\\Users\\ilesh\\Desktop\\qec-timing\\results\\stage6c"
+  },
+  "noise": {
+    "p_2q": 0.004,
+    "p_1q": 8e-05,
+    "p_meas": 0.0016,
+    "p_init": 0.0
+  },
+  "k_A": 100.0,
+  "f_quad_B": 0.1,
+  "f_lin_B": 0.0,
+  "coarse_dtstar": {
+    "A": {
+      "3": 2.0,
+      "5": 0.9,
+      "7": 0.8,
+      "9": 0.5,
+      "11": 0.4
+    },
+    "B": {
+      "3": 1.1,
+      "5": 1.0,
+      "7": 0.75,
+      "9": 0.65,
+      "11": 0.55
+    }
+  },
+  "dt_base": {
+    "A": 2.0,
+    "B": 1.1
+  },
+  "target_failures": 1000,
+  "p_L_target": 0.2,
+  "n_max_rounds": 60,
+  "seed_stride": 100000,
+  "versions": {
+    "stim": "1.16.0",
+    "PyMatching": "2.4.0",
+    "numpy": "2.5.3"
+  },
+  "seconds": 2852.521117599972,
+  "n_done": 123,
+  "n_skipped": 69
+}
