@@ -6,6 +6,7 @@ __pycache__/
 
 # Virtual environment
 .venv/
+.venv-h2/
 
 # Selene build artefacts (compiled emulator binaries / temp build dirs)
 *.ll
@@ -52,3 +53,11 @@ results/stage6c/**
 !results/stage6c/**/*.csv
 !results/stage6c/**/*.log
 !results/stage6c/**/*.png
+
+# Stage 7a H2 feasibility: estimates, QIR scaling, and the small test QIR files.
+!results/stage7a/
+results/stage7a/**
+!results/stage7a/**/
+!results/stage7a/**/*.json
+!results/stage7a/**/*.bc
+!results/stage7a/**/*.ll

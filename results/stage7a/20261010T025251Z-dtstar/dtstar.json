@@ -1,0 +1,1043 @@
+{
+  "t_round_s": 0.002,
+  "noise": {
+    "p1": 1.89e-05,
+    "p2": 0.00105,
+    "p_meas_0": 0.0006,
+    "p_meas_1": 0.00139,
+    "p_init": 4e-05,
+    "quadratic_dephasing_rate": 0.043,
+    "linear_dephasing_rate": 0.0028,
+    "coherent_to_incoherent_factor": 2.0
+  },
+  "runs": {
+    "cycles_d3": {
+      "convention": "cycles",
+      "d": 3,
+      "f_quad": 0.0010807078728348888,
+      "f_lin": 5.6e-06,
+      "points": [
+        {
+          "d": 3,
+          "dt_rounds": 1.0,
+          "n_rounds": 60,
+          "shots": 57216,
+          "failures": 507,
+          "p_L": 0.008861157718120806,
+          "T_rounds": 60.0,
+          "R_per_round": 0.0001490103008000036,
+          "saturated": false,
+          "seed_block": [
+            70000000,
+            70100000
+          ]
+        },
+        {
+          "d": 3,
+          "dt_rounds": 1.925,
+          "n_rounds": 60,
+          "shots": 52689,
+          "failures": 490,
+          "p_L": 0.009299853859439352,
+          "T_rounds": 115.5,
+          "R_per_round": 8.127643941902258e-05,
+          "saturated": false,
+          "seed_block": [
+            70100000,
+            70200000
+          ]
+        },
+        {
+          "d": 3,
+          "dt_rounds": 3.707,
+          "n_rounds": 60,
+          "shots": 46416,
+          "failures": 431,
+          "p_L": 0.009285591175456739,
+          "T_rounds": 222.42000000000002,
+          "R_per_round": 4.214052679924715e-05,
+          "saturated": false,
+          "seed_block": [
+            70200000,
+            70300000
+          ]
+        },
+        {
+          "d": 3,
+          "dt_rounds": 7.136,
+          "n_rounds": 60,
+          "shots": 57916,
+          "failures": 541,
+          "p_L": 0.009341114717867256,
+          "T_rounds": 428.16,
+          "R_per_round": 2.2023246832064163e-05,
+          "saturated": false,
+          "seed_block": [
+            70300000,
+            70400000
+          ]
+        },
+        {
+          "d": 3,
+          "dt_rounds": 13.739,
+          "n_rounds": 60,
+          "shots": 50416,
+          "failures": 507,
+          "p_L": 0.0100563313233894,
+          "T_rounds": 824.34,
+          "R_per_round": 1.232360179695972e-05,
+          "saturated": false,
+          "seed_block": [
+            70400000,
+            70500000
+          ]
+        },
+        {
+          "d": 3,
+          "dt_rounds": 26.451,
+          "n_rounds": 60,
+          "shots": 53274,
+          "failures": 636,
+          "p_L": 0.011938281337988512,
+          "T_rounds": 1587.06,
+          "R_per_round": 7.613520565694385e-06,
+          "saturated": false,
+          "seed_block": [
+            70500000,
+            70600000
+          ]
+        },
+        {
+          "d": 3,
+          "dt_rounds": 50.925,
+          "n_rounds": 60,
+          "shots": 22322,
+          "failures": 459,
+          "p_L": 0.020562673595555955,
+          "T_rounds": 3055.5,
+          "R_per_round": 6.8720207469260316e-06,
+          "saturated": false,
+          "seed_block": [
+            70600000,
+            70700000
+          ]
+        },
+        {
+          "d": 3,
+          "dt_rounds": 98.043,
+          "n_rounds": 60,
+          "shots": 7612,
+          "failures": 403,
+          "p_L": 0.052942722017866525,
+          "T_rounds": 5882.58,
+          "R_per_round": 9.512949535339008e-06,
+          "saturated": false,
+          "seed_block": [
+            70700000,
+            70800000
+          ]
+        },
+        {
+          "d": 3,
+          "dt_rounds": 188.758,
+          "n_rounds": 60,
+          "shots": 2433,
+          "failures": 571,
+          "p_L": 0.23468968351829017,
+          "T_rounds": 11325.48,
+          "R_per_round": 2.7977090239746136e-05,
+          "saturated": false,
+          "seed_block": [
+            70800000,
+            70900000
+          ]
+        },
+        {
+          "d": 3,
+          "dt_rounds": 363.407,
+          "n_rounds": 9,
+          "shots": 2184,
+          "failures": 483,
+          "p_L": 0.22115384615384615,
+          "T_rounds": 3270.663,
+          "R_per_round": 8.927056816843455e-05,
+          "saturated": false,
+          "seed_block": [
+            70900000,
+            71000000
+          ]
+        },
+        {
+          "d": 3,
+          "dt_rounds": 699.65,
+          "n_rounds": 6,
+          "shots": 2000,
+          "failures": 983,
+          "p_L": 0.4915,
+          "T_rounds": 4197.9,
+          "R_per_round": 0.00048530716964743323,
+          "saturated": true,
+          "seed_block": [
+            71000000,
+            71100000
+          ]
+        },
+        {
+          "d": 3,
+          "dt_rounds": 1347.005,
+          "n_rounds": 6,
+          "shots": 2000,
+          "failures": 1046,
+          "p_L": 0.523,
+          "T_rounds": 8082.03,
+          "R_per_round": 0.0005269216515786472,
+          "saturated": true,
+          "seed_block": [
+            71100000,
+            71200000
+          ]
+        },
+        {
+          "d": 3,
+          "dt_rounds": 2593.327,
+          "n_rounds": 6,
+          "shots": 2000,
+          "failures": 1005,
+          "p_L": 0.5025,
+          "T_rounds": 15559.962,
+          "R_per_round": 0.00027368939562372803,
+          "saturated": true,
+          "seed_block": [
+            71200000,
+            71300000
+          ]
+        },
+        {
+          "d": 3,
+          "dt_rounds": 4992.815,
+          "n_rounds": 6,
+          "shots": 2000,
+          "failures": 1007,
+          "p_L": 0.5035,
+          "T_rounds": 29956.89,
+          "R_per_round": 0.00014215750018470457,
+          "saturated": true,
+          "seed_block": [
+            71300000,
+            71400000
+          ]
+        },
+        {
+          "d": 3,
+          "dt_rounds": 9612.438,
+          "n_rounds": 6,
+          "shots": 2000,
+          "failures": 1002,
+          "p_L": 0.501,
+          "T_rounds": 57674.628000000004,
+          "R_per_round": 7.383830192555683e-05,
+          "saturated": true,
+          "seed_block": [
+            71400000,
+            71500000
+          ]
+        },
+        {
+          "d": 3,
+          "dt_rounds": 18506.389,
+          "n_rounds": 6,
+          "shots": 2000,
+          "failures": 1025,
+          "p_L": 0.5125,
+          "T_rounds": 111038.334,
+          "R_per_round": 3.835249001221663e-05,
+          "saturated": true,
+          "seed_block": [
+            71500000,
+            71600000
+          ]
+        }
+      ],
+      "dtstar_rounds": 44.09210456161858,
+      "dtstar_rounds_ci95": [
+        41.940347091829146,
+        46.24427934960212
+      ],
+      "dtstar_seconds": 0.08818420912323716,
+      "R_star_per_round": 6.460447209853134e-06,
+      "R_at_1_round": 0.0001490103008000036,
+      "gain_vs_every_round": 23.06501329702701
+    },
+    "cycles_d5": {
+      "convention": "cycles",
+      "d": 5,
+      "f_quad": 0.0010807078728348888,
+      "f_lin": 5.6e-06,
+      "points": [
+        {
+          "d": 5,
+          "dt_rounds": 1.0,
+          "n_rounds": 60,
+          "shots": 548003,
+          "failures": 539,
+          "p_L": 0.0009835712578215813,
+          "T_rounds": 60.0,
+          "R_per_round": 1.6408999013459742e-05,
+          "saturated": false,
+          "seed_block": [
+            71600000,
+            71700000
+          ]
+        },
+        {
+          "d": 5,
+          "dt_rounds": 1.925,
+          "n_rounds": 60,
+          "shots": 446310,
+          "failures": 422,
+          "p_L": 0.0009455311330689431,
+          "T_rounds": 115.5,
+          "R_per_round": 8.194167020808408e-06,
+          "saturated": false,
+          "seed_block": [
+            71700000,
+            71800000
+          ]
+        },
+        {
+          "d": 5,
+          "dt_rounds": 3.707,
+          "n_rounds": 60,
+          "shots": 548003,
+          "failures": 550,
+          "p_L": 0.0010036441406342665,
+          "T_rounds": 222.42000000000002,
+          "R_per_round": 4.51691750827692e-06,
+          "saturated": false,
+          "seed_block": [
+            71800000,
+            71900000
+          ]
+        },
+        {
+          "d": 5,
+          "dt_rounds": 7.136,
+          "n_rounds": 60,
+          "shots": 426310,
+          "failures": 415,
+          "p_L": 0.0009734700100865567,
+          "T_rounds": 428.16,
+          "R_per_round": 2.2758288624574746e-06,
+          "saturated": false,
+          "seed_block": [
+            71900000,
+            72000000
+          ]
+        },
+        {
+          "d": 5,
+          "dt_rounds": 13.739,
+          "n_rounds": 60,
+          "shots": 403893,
+          "failures": 447,
+          "p_L": 0.0011067287623207137,
+          "T_rounds": 824.34,
+          "R_per_round": 1.344051509466228e-06,
+          "saturated": false,
+          "seed_block": [
+            72000000,
+            72100000
+          ]
+        },
+        {
+          "d": 5,
+          "dt_rounds": 26.451,
+          "n_rounds": 60,
+          "shots": 383717,
+          "failures": 524,
+          "p_L": 0.0013655897445252621,
+          "T_rounds": 1587.06,
+          "R_per_round": 8.616296688926533e-07,
+          "saturated": false,
+          "seed_block": [
+            72100000,
+            72200000
+          ]
+        },
+        {
+          "d": 5,
+          "dt_rounds": 50.925,
+          "n_rounds": 60,
+          "shots": 174627,
+          "failures": 524,
+          "p_L": 0.003000681452467259,
+          "T_rounds": 3055.5,
+          "R_per_round": 9.85017748032709e-07,
+          "saturated": false,
+          "seed_block": [
+            72200000,
+            72300000
+          ]
+        },
+        {
+          "d": 5,
+          "dt_rounds": 98.043,
+          "n_rounds": 60,
+          "shots": 44616,
+          "failures": 512,
+          "p_L": 0.011475703783396091,
+          "T_rounds": 5882.58,
+          "R_per_round": 1.973529625305169e-06,
+          "saturated": false,
+          "seed_block": [
+            72300000,
+            72400000
+          ]
+        },
+        {
+          "d": 5,
+          "dt_rounds": 188.758,
+          "n_rounds": 60,
+          "shots": 4707,
+          "failures": 438,
+          "p_L": 0.09305289993626514,
+          "T_rounds": 11325.48,
+          "R_per_round": 9.091221595044684e-06,
+          "saturated": false,
+          "seed_block": [
+            72400000,
+            72500000
+          ]
+        },
+        {
+          "d": 5,
+          "dt_rounds": 363.407,
+          "n_rounds": 12,
+          "shots": 2187,
+          "failures": 458,
+          "p_L": 0.20941929583904892,
+          "T_rounds": 4360.884,
+          "R_per_round": 6.22266895298423e-05,
+          "saturated": false,
+          "seed_block": [
+            72500000,
+            72600000
+          ]
+        },
+        {
+          "d": 5,
+          "dt_rounds": 699.65,
+          "n_rounds": 10,
+          "shots": 2000,
+          "failures": 999,
+          "p_L": 0.4995,
+          "T_rounds": 6996.5,
+          "R_per_round": 0.0004936579203160249,
+          "saturated": true,
+          "seed_block": [
+            72600000,
+            72700000
+          ]
+        },
+        {
+          "d": 5,
+          "dt_rounds": 1347.005,
+          "n_rounds": 10,
+          "shots": 2000,
+          "failures": 985,
+          "p_L": 0.4925,
+          "T_rounds": 13470.050000000001,
+          "R_per_round": 0.00015589047842732307,
+          "saturated": true,
+          "seed_block": [
+            72700000,
+            72800000
+          ]
+        },
+        {
+          "d": 5,
+          "dt_rounds": 2593.327,
+          "n_rounds": 10,
+          "shots": 2000,
+          "failures": 970,
+          "p_L": 0.485,
+          "T_rounds": 25933.27,
+          "R_per_round": 6.760732251119857e-05,
+          "saturated": true,
+          "seed_block": [
+            72800000,
+            72900000
+          ]
+        },
+        {
+          "d": 5,
+          "dt_rounds": 4992.815,
+          "n_rounds": 10,
+          "shots": 2000,
+          "failures": 987,
+          "p_L": 0.4935,
+          "T_rounds": 49928.15,
+          "R_per_round": 4.349055514294641e-05,
+          "saturated": true,
+          "seed_block": [
+            72900000,
+            73000000
+          ]
+        },
+        {
+          "d": 5,
+          "dt_rounds": 9612.438,
+          "n_rounds": 10,
+          "shots": 2000,
+          "failures": 1020,
+          "p_L": 0.51,
+          "T_rounds": 96124.38,
+          "R_per_round": 4.43029811553341e-05,
+          "saturated": true,
+          "seed_block": [
+            73000000,
+            73100000
+          ]
+        },
+        {
+          "d": 5,
+          "dt_rounds": 18506.389,
+          "n_rounds": 10,
+          "shots": 2000,
+          "failures": 976,
+          "p_L": 0.488,
+          "T_rounds": 185063.89,
+          "R_per_round": 1.0076794151020467e-05,
+          "saturated": true,
+          "seed_block": [
+            73100000,
+            73200000
+          ]
+        }
+      ],
+      "dtstar_rounds": 35.87814397905818,
+      "dtstar_rounds_ci95": [
+        34.674166237829674,
+        37.158443855981446
+      ],
+      "dtstar_seconds": 0.07175628795811637,
+      "R_star_per_round": 8.129626637512717e-07,
+      "R_at_1_round": 1.6408999013459742e-05,
+      "gain_vs_every_round": 20.184197559262234
+    },
+    "radians_d3": {
+      "convention": "radians",
+      "d": 3,
+      "f_quad": 0.00017199999999999998,
+      "f_lin": 5.6e-06,
+      "points": [
+        {
+          "d": 3,
+          "dt_rounds": 1.0,
+          "n_rounds": 60,
+          "shots": 57916,
+          "failures": 518,
+          "p_L": 0.008943987844464396,
+          "T_rounds": 60.0,
+          "R_per_round": 0.0001504158285349151,
+          "saturated": false,
+          "seed_block": [
+            73200000,
+            73300000
+          ]
+        },
+        {
+          "d": 3,
+          "dt_rounds": 2.154,
+          "n_rounds": 60,
+          "shots": 53493,
+          "failures": 491,
+          "p_L": 0.009178771054156619,
+          "T_rounds": 129.24,
+          "R_per_round": 7.168110786120871e-05,
+          "saturated": false,
+          "seed_block": [
+            73300000,
+            73400000
+          ]
+        },
+        {
+          "d": 3,
+          "dt_rounds": 4.642,
+          "n_rounds": 60,
+          "shots": 52689,
+          "failures": 529,
+          "p_L": 0.010040046309476362,
+          "T_rounds": 278.52,
+          "R_per_round": 3.6414688028799726e-05,
+          "saturated": false,
+          "seed_block": [
+            73400000,
+            73500000
+          ]
+        },
+        {
+          "d": 3,
+          "dt_rounds": 10.0,
+          "n_rounds": 60,
+          "shots": 64226,
+          "failures": 584,
+          "p_L": 0.00909289072961106,
+          "T_rounds": 600.0,
+          "R_per_round": 1.529431278981154e-05,
+          "saturated": false,
+          "seed_block": [
+            73500000,
+            73600000
+          ]
+        },
+        {
+          "d": 3,
+          "dt_rounds": 21.544,
+          "n_rounds": 60,
+          "shots": 55801,
+          "failures": 519,
+          "p_L": 0.009300908585867637,
+          "T_rounds": 1292.64,
+          "R_per_round": 7.263045758974427e-06,
+          "saturated": false,
+          "seed_block": [
+            73600000,
+            73700000
+          ]
+        },
+        {
+          "d": 3,
+          "dt_rounds": 46.416,
+          "n_rounds": 60,
+          "shots": 44647,
+          "failures": 485,
+          "p_L": 0.010862991914350348,
+          "T_rounds": 2784.96,
+          "R_per_round": 3.94358770973205e-06,
+          "saturated": false,
+          "seed_block": [
+            73700000,
+            73800000
+          ]
+        },
+        {
+          "d": 3,
+          "dt_rounds": 100.0,
+          "n_rounds": 60,
+          "shots": 48017,
+          "failures": 686,
+          "p_L": 0.014286606826748859,
+          "T_rounds": 6000.0,
+          "R_per_round": 2.415781204951966e-06,
+          "saturated": false,
+          "seed_block": [
+            73800000,
+            73900000
+          ]
+        },
+        {
+          "d": 3,
+          "dt_rounds": 215.443,
+          "n_rounds": 60,
+          "shots": 22322,
+          "failures": 559,
+          "p_L": 0.02504255891049189,
+          "T_rounds": 12926.58,
+          "R_per_round": 1.987489966718324e-06,
+          "saturated": false,
+          "seed_block": [
+            73900000,
+            74000000
+          ]
+        },
+        {
+          "d": 3,
+          "dt_rounds": 464.159,
+          "n_rounds": 60,
+          "shots": 8637,
+          "failures": 559,
+          "p_L": 0.06472154683339122,
+          "T_rounds": 27849.54,
+          "R_per_round": 2.488769112564492e-06,
+          "saturated": false,
+          "seed_block": [
+            74000000,
+            74100000
+          ]
+        },
+        {
+          "d": 3,
+          "dt_rounds": 1000.0,
+          "n_rounds": 47,
+          "shots": 2276,
+          "failures": 434,
+          "p_L": 0.19068541300527242,
+          "T_rounds": 47000.0,
+          "R_per_round": 5.109034665193977e-06,
+          "saturated": false,
+          "seed_block": [
+            74100000,
+            74200000
+          ]
+        },
+        {
+          "d": 3,
+          "dt_rounds": 2154.435,
+          "n_rounds": 7,
+          "shots": 2102,
+          "failures": 409,
+          "p_L": 0.19457659372026642,
+          "T_rounds": 15081.045,
+          "R_per_round": 1.6342006379100055e-05,
+          "saturated": false,
+          "seed_block": [
+            74200000,
+            74300000
+          ]
+        },
+        {
+          "d": 3,
+          "dt_rounds": 4641.589,
+          "n_rounds": 6,
+          "shots": 2000,
+          "failures": 969,
+          "p_L": 0.4845,
+          "T_rounds": 27849.534,
+          "R_per_round": 6.23667181378509e-05,
+          "saturated": true,
+          "seed_block": [
+            74300000,
+            74400000
+          ]
+        },
+        {
+          "d": 3,
+          "dt_rounds": 10000.0,
+          "n_rounds": 6,
+          "shots": 2000,
+          "failures": 992,
+          "p_L": 0.496,
+          "T_rounds": 60000.0,
+          "R_per_round": 4.0235947810852505e-05,
+          "saturated": true,
+          "seed_block": [
+            74400000,
+            74500000
+          ]
+        },
+        {
+          "d": 3,
+          "dt_rounds": 21544.347,
+          "n_rounds": 6,
+          "shots": 2000,
+          "failures": 987,
+          "p_L": 0.4935,
+          "T_rounds": 129266.08200000001,
+          "R_per_round": 1.679793281551072e-05,
+          "saturated": true,
+          "seed_block": [
+            74500000,
+            74600000
+          ]
+        },
+        {
+          "d": 3,
+          "dt_rounds": 46415.888,
+          "n_rounds": 6,
+          "shots": 2000,
+          "failures": 995,
+          "p_L": 0.4975,
+          "T_rounds": 278495.328,
+          "R_per_round": 9.512399013293385e-06,
+          "saturated": true,
+          "seed_block": [
+            74600000,
+            74700000
+          ]
+        },
+        {
+          "d": 3,
+          "dt_rounds": 100000.0,
+          "n_rounds": 6,
+          "shots": 2000,
+          "failures": 981,
+          "p_L": 0.4905,
+          "T_rounds": 600000.0,
+          "R_per_round": 3.3027635831797464e-06,
+          "saturated": true,
+          "seed_block": [
+            74700000,
+            74800000
+          ]
+        }
+      ],
+      "dtstar_rounds": 180.7895429348002,
+      "dtstar_rounds_ci95": [
+        172.8232322007403,
+        189.5204113989299
+      ],
+      "dtstar_seconds": 0.3615790858696004,
+      "R_star_per_round": 1.7607720547080744e-06,
+      "R_at_1_round": 0.0001504158285349151,
+      "gain_vs_every_round": 85.42606530625177
+    },
+    "radians_d5": {
+      "convention": "radians",
+      "d": 5,
+      "f_quad": 0.00017199999999999998,
+      "f_lin": 5.6e-06,
+      "points": [
+        {
+          "d": 5,
+          "dt_rounds": 1.0,
+          "n_rounds": 60,
+          "shots": 426310,
+          "failures": 425,
+          "p_L": 0.0009969271187633413,
+          "T_rounds": 60.0,
+          "R_per_round": 1.6632038425028227e-05,
+          "saturated": false,
+          "seed_block": [
+            74800000,
+            74900000
+          ]
+        },
+        {
+          "d": 5,
+          "dt_rounds": 2.154,
+          "n_rounds": 60,
+          "shots": 548003,
+          "failures": 548,
+          "p_L": 0.0009999945255774146,
+          "T_rounds": 129.24,
+          "R_per_round": 7.745247987799417e-06,
+          "saturated": false,
+          "seed_block": [
+            74900000,
+            75000000
+          ]
+        },
+        {
+          "d": 5,
+          "dt_rounds": 4.642,
+          "n_rounds": 60,
+          "shots": 396596,
+          "failures": 402,
+          "p_L": 0.0010136259568931608,
+          "T_rounds": 278.52,
+          "R_per_round": 3.6430230689772193e-06,
+          "saturated": false,
+          "seed_block": [
+            75000000,
+            75100000
+          ]
+        },
+        {
+          "d": 5,
+          "dt_rounds": 10.0,
+          "n_rounds": 60,
+          "shots": 697354,
+          "failures": 685,
+          "p_L": 0.0009822844638447618,
+          "T_rounds": 600.0,
+          "R_per_round": 1.6387510203278963e-06,
+          "saturated": false,
+          "seed_block": [
+            75100000,
+            75200000
+          ]
+        },
+        {
+          "d": 5,
+          "dt_rounds": 21.544,
+          "n_rounds": 60,
+          "shots": 511495,
+          "failures": 538,
+          "p_L": 0.001051818688354725,
+          "T_rounds": 1292.64,
+          "R_per_round": 8.14555146749473e-07,
+          "saturated": false,
+          "seed_block": [
+            75200000,
+            75300000
+          ]
+        },
+        {
+          "d": 5,
+          "dt_rounds": 46.416,
+          "n_rounds": 60,
+          "shots": 451364,
+          "failures": 596,
+          "p_L": 0.0013204420379117519,
+          "T_rounds": 2784.96,
+          "R_per_round": 4.747603846683695e-07,
+          "saturated": false,
+          "seed_block": [
+            75300000,
+            75400000
+          ]
+        },
+        {
+          "d": 5,
+          "dt_rounds": 100.0,
+          "n_rounds": 60,
+          "shots": 287884,
+          "failures": 531,
+          "p_L": 0.0018444929207597504,
+          "T_rounds": 6000.0,
+          "R_per_round": 3.079839108518789e-07,
+          "saturated": false,
+          "seed_block": [
+            75400000,
+            75500000
+          ]
+        },
+        {
+          "d": 5,
+          "dt_rounds": 215.443,
+          "n_rounds": 60,
+          "shots": 112190,
+          "failures": 455,
+          "p_L": 0.004055619930475087,
+          "T_rounds": 12926.58,
+          "R_per_round": 3.15022029867368e-07,
+          "saturated": false,
+          "seed_block": [
+            75500000,
+            75600000
+          ]
+        },
+        {
+          "d": 5,
+          "dt_rounds": 464.159,
+          "n_rounds": 60,
+          "shots": 42978,
+          "failures": 728,
+          "p_L": 0.01693889897156685,
+          "T_rounds": 27849.54,
+          "R_per_round": 6.187705363537736e-07,
+          "saturated": false,
+          "seed_block": [
+            75600000,
+            75700000
+          ]
+        },
+        {
+          "d": 5,
+          "dt_rounds": 1000.0,
+          "n_rounds": 60,
+          "shots": 3953,
+          "failures": 471,
+          "p_L": 0.1191500126486213,
+          "T_rounds": 60000.0,
+          "R_per_round": 2.268354456791264e-06,
+          "saturated": false,
+          "seed_block": [
+            75700000,
+            75800000
+          ]
+        },
+        {
+          "d": 5,
+          "dt_rounds": 2154.435,
+          "n_rounds": 10,
+          "shots": 2074,
+          "failures": 462,
+          "p_L": 0.2227579556412729,
+          "T_rounds": 21544.350000000002,
+          "R_per_round": 1.3686121127631534e-05,
+          "saturated": false,
+          "seed_block": [
+            75800000,
+            75900000
+          ]
+        },
+        {
+          "d": 5,
+          "dt_rounds": 4641.589,
+          "n_rounds": 10,
+          "shots": 2000,
+          "failures": 970,
+          "p_L": 0.485,
+          "T_rounds": 46415.89,
+          "R_per_round": 3.777324852889798e-05,
+          "saturated": true,
+          "seed_block": [
+            75900000,
+            76000000
+          ]
+        },
+        {
+          "d": 5,
+          "dt_rounds": 10000.0,
+          "n_rounds": 10,
+          "shots": 2000,
+          "failures": 1021,
+          "p_L": 0.5105,
+          "T_rounds": 100000.0,
+          "R_per_round": 4.2585965957081744e-05,
+          "saturated": true,
+          "seed_block": [
+            76000000,
+            76100000
+          ]
+        },
+        {
+          "d": 5,
+          "dt_rounds": 21544.347,
+          "n_rounds": 10,
+          "shots": 2000,
+          "failures": 1035,
+          "p_L": 0.5175,
+          "T_rounds": 215443.47,
+          "R_per_round": 1.97666543140443e-05,
+          "saturated": true,
+          "seed_block": [
+            76100000,
+            76200000
+          ]
+        },
+        {
+          "d": 5,
+          "dt_rounds": 46415.888,
+          "n_rounds": 10,
+          "shots": 2000,
+          "failures": 1046,
+          "p_L": 0.523,
+          "T_rounds": 464158.88,
+          "R_per_round": 9.174868303086595e-06,
+          "saturated": true,
+          "seed_block": [
+            76200000,
+            76300000
+          ]
+        },
+        {
+          "d": 5,
+          "dt_rounds": 100000.0,
+          "n_rounds": 10,
+          "shots": 2000,
+          "failures": 1018,
+          "p_L": 0.509,
+          "T_rounds": 1000000.0,
+          "R_per_round": 4.258596595708174e-06,
+          "saturated": true,
+          "seed_block": [
+            76300000,
+            76400000
+          ]
+        }
+      ],
+      "dtstar_rounds": 137.60287700483977,
+      "dtstar_rounds_ci95": [
+        132.13589241560243,
+        143.6503770708238
+      ],
+      "dtstar_seconds": 0.27520575400967956,
+      "R_star_per_round": 2.3821472936066664e-07,
+      "R_at_1_round": 1.6632038425028227e-05,
+      "gain_vs_every_round": 69.81952152860647
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "d": 3,
+  "rounds": 2,
+  "checks": "Z",
+  "p_inject": 0.05,
+  "p_inject_effective": 0.05000019073486328,
+  "base_seed": 7000000,
+  "n_qubits": 10,
+  "hugr_bytes": 12109,
+  "qir_bitcode_bytes": 8128,
+  "qir_ir_chars": 38073,
+  "seconds_hugr": 0.1847944000037387,
+  "seconds_qir": 0.20150810002814978,
+  "fits_h2_1e_stabilizer": true,
+  "qir_calls": {
+    "__quantum__rt__initialize": 1,
+    "___get_current_shot": 1,
+    "___random_seed": 1,
+    "___random_int_bounded": 18,
+    "__quantum__qis__phasedx__body": 56,
+    "__quantum__qis__rzz__body": 24,
+    "__quantum__qis__rz__body": 66,
+    "__quantum__qis__mz__body": 17,
+    "__quantum__qis__reset__body": 16,
+    "__quantum__rt__read_result": 17,
+    "__quantum__rt__bool_record_output": 17
+  },
+  "versions": {
+    "guppylang": "0.21.11",
+    "guppylang-internals": "0.32.0",
+    "hugr": "0.15.5",
+    "hugr-qir": "0.1.2",
+    "pyqir": "0.12.6",
+    "quantinuum-qircheck": "0.7.0"
+  }
+}
