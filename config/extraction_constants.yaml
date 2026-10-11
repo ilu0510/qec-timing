@@ -1,0 +1,109 @@
+provenance:
+  notebook: noise_qec/notebooks/04_extraction_cost_steane.ipynb
+  generated: '2026-09-15'
+  shots: 6000
+  p_1q: 0.006
+  rounds_swept:
+  - 1
+  - 2
+  - 4
+  - 6
+  - 8
+  code: Steane [[7,1,3]], Z-stabilisers, bare ancillas
+conversion_measured_in_selene:
+  ops_per_cx_data_side: 0.997
+  ops_per_cx_ancilla_side: 2.923
+  note: a property of the CNOT native decomposition, so it transfers between codes
+steane:
+  status: measured in Selene
+  ops_per_round:
+    data_per_qubit:
+    - 0.962
+    - 0.934
+    - 2.115
+    - 1.068
+    - 2.14
+    - 1.856
+    - 2.876
+    data_mean: 1.707
+    ancilla: 11.692
+  p_stab:
+    per_qubit:
+    - 0.00385
+    - 0.003736
+    - 0.008421
+    - 0.004269
+    - 0.008521
+    - 0.0074
+    - 0.011417
+    mean: 0.006802
+    note: at p_1q above; proportional to p_1q, so NOT scale-free - provenance only
+  lambda_per_idle_op: 0.5858
+  b_read_floor: 6.8487
+  z_check_multiplicity:
+  - 1
+  - 1
+  - 2
+  - 1
+  - 2
+  - 2
+  - 3
+surface:
+  rotated_d3:
+    data_qubits: 9
+    ancillas: 8
+    cx_per_data: 2.667
+    cx_per_ancilla: 3.0
+    n_data: 2.658
+    n_anc: 8.769
+    lambda_per_idle_op: 0.3762
+    b_read_floor: 3.2989
+  rotated_d5:
+    data_qubits: 25
+    ancillas: 24
+    cx_per_data: 3.2
+    cx_per_ancilla: 3.333
+    n_data: 3.19
+    n_anc: 9.744
+    lambda_per_idle_op: 0.3135
+    b_read_floor: 3.0546
+  rotated_d7:
+    data_qubits: 49
+    ancillas: 48
+    cx_per_data: 3.429
+    cx_per_ancilla: 3.5
+    n_data: 3.418
+    n_anc: 10.231
+    lambda_per_idle_op: 0.2926
+    b_read_floor: 2.9935
+  unrotated_d3:
+    data_qubits: 13
+    ancillas: 12
+    cx_per_data: 3.077
+    cx_per_ancilla: 3.333
+    n_data: 3.067
+    n_anc: 9.744
+    lambda_per_idle_op: 0.326
+    b_read_floor: 3.1767
+  unrotated_d5:
+    data_qubits: 41
+    ancillas: 40
+    cx_per_data: 3.512
+    cx_per_ancilla: 3.6
+    n_data: 3.501
+    n_anc: 10.523
+    lambda_per_idle_op: 0.2856
+    b_read_floor: 3.0057
+  unrotated_d7:
+    data_qubits: 85
+    ancillas: 84
+    cx_per_data: 3.671
+    cx_per_ancilla: 3.714
+    n_data: 3.659
+    n_anc: 10.857
+    lambda_per_idle_op: 0.2733
+    b_read_floor: 2.9673
+  status: derived from CX multiplicity x the Selene conversion
+ratios:
+  note: lambda = k / n_data for k idle ops per tau unit; b_read_floor is an upper
+    bound. Only the ratios are scale-free.
