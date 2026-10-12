@@ -148,7 +148,7 @@ shot for shot.
   the noise equations in section 2 are deliberately **not** (see the header).
 
 The wire format for detection events (bit-packed words, bit/word order,
-padding, and a numpy unpacking snippet) is specified in `docs/interfaces.md`.
+padding, and a numpy unpacking snippet) is specified in `docs/stub_arc/interfaces.md`.
 
 ## 7. Randomness
 
@@ -182,6 +182,6 @@ point the per-round form becomes necessary and this section should be revised.
 For the record, the cost argument for deferring it turned out to be weak: the
 Stage 2 benchmark found that emission accounts for only **3-4% of run time**
 with bit-packing, not the dominant share a Stage 0 extrapolation suggested
-(measured against a no-emission control; see `docs/interfaces.md`). Per-round
+(measured against a no-emission control; see `docs/stub_arc/interfaces.md`). Per-round
 metadata would therefore have been affordable. It is deferred because it is
 redundant under a static schedule, not because it is expensive.

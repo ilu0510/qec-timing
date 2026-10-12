@@ -1,6 +1,6 @@
 """Stage 2 tests: noise injection inside Guppy, static lambda, Stim backend.
 
-Fixed base seeds throughout. The contract under test is docs/noise_spec.md.
+Fixed base seeds throughout. The contract under test is docs/stub_arc/noise_spec.md.
 """
 
 from __future__ import annotations

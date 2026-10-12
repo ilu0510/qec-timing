@@ -2,7 +2,7 @@
 
 ``params`` runs in Python (``exp`` is unavailable inside Guppy); ``primitives``
 holds the Guppy-side noise injection. The contract both implement is written up
-in ``docs/noise_spec.md``.
+in ``docs/stub_arc/noise_spec.md``.
 """
 
 from .params import (

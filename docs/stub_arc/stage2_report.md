@@ -6,8 +6,8 @@ computed in-program and emitted bit-packed, and the results agree with the
 Stage 1 reference model.
 
 **91 tests pass in 95 s** (11 Stage 0, 62 Stage 1, 18 new). The noise contract
-teammates need is in `docs/noise_spec.md`; the wire format is in
-`docs/interfaces.md`.
+teammates need is in `docs/stub_arc/noise_spec.md`; the wire format is in
+`docs/stub_arc/interfaces.md`.
 
 ## Headline results
 
@@ -92,7 +92,7 @@ so `measure_array` is required.
 
 Detection events are computed in-program (Eq. A1) and emitted as `n_rounds + 1`
 blocks of `ceil(n_checks / 64)` unsigned 64-bit words. Bit/word order, padding
-and a copy-paste numpy unpacking snippet are specified in `docs/interfaces.md`.
+and a copy-paste numpy unpacking snippet are specified in `docs/stub_arc/interfaces.md`.
 
 The decision is a crossover, not a single measurement: sparse costs one word per
 *fired detector*, packed costs `ceil(n_checks / 64)` words per *round*.
@@ -130,8 +130,8 @@ dominates run time. **That does not hold for this program.** Against the
 no-emission control, bit-packed emission is only **3-4%** of run time; the
 remainder is RNG draws and gate operations (the control alone is 244 ms/shot at
 d = 27). The Stage 0 measurement was real but described a different workload --
-dumping 1500 loose bits per shot. Corrected in `docs/interfaces.md` and
-`docs/noise_spec.md`.
+dumping 1500 loose bits per shot. Corrected in `docs/stub_arc/interfaces.md` and
+`docs/stub_arc/noise_spec.md`.
 
 The practical consequence: **further optimising the wire format would be wasted
 effort.** If Stage 4 needs more throughput, the RNG call rate is the target --
@@ -219,8 +219,8 @@ d = 27**, dominated by RNG draws and gates.
 results/stage2/format_benchmark.csv / _summary.json / .log
 results/stage2/crosscheck.json
 results/stage2/refine_minimum.csv / _summary.json / .png / .log
-docs/noise_spec.md          the standalone noise contract
-docs/interfaces.md          + detection-event wire format section
+docs/stub_arc/noise_spec.md          the standalone noise contract
+docs/stub_arc/interfaces.md          + detection-event wire format section
 ```
 
 ## Assumptions and open points

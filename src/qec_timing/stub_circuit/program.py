@@ -14,7 +14,7 @@ package; Stage 3 promoted it to a shared module alongside `ansatz.py`.)
 Everything about the geometry is **compile-time**: array sizes and loop bounds
 must be comptime in Guppy, so a given distance produces one compiled binary.
 `p_data`, `p_read`, `n_rounds` and `base_seed` are **runtime** arguments, so a
-whole sweep reuses a single binary (Stage 0, docs/interfaces.md section (c)).
+whole sweep reuses a single binary (Stage 0, docs/stub_arc/interfaces.md section (c)).
 """
 
 from __future__ import annotations
@@ -126,7 +126,7 @@ def build_memory_program(
       static schedule, so emitted once per shot, with ``t_j = j * dt``
     * ``n_rounds``, ``n_checks``, ``n_words`` -- so the stream can be reshaped
 
-    The full schema is in ``docs/interfaces.md``.
+    The full schema is in ``docs/stub_arc/interfaces.md``.
     """
     if emit not in ("packed", "sparse", "dense", "none"):
         raise ValueError(f"unknown emit format {emit!r}")
@@ -194,7 +194,7 @@ def build_memory_program(
         inject_round: int,
         inject_qubit: int,
     ) -> None:
-        # Exactly one RNG, seeded per shot; see docs/noise_spec.md section 7.
+        # Exactly one RNG, seeded per shot; see docs/stub_arc/noise_spec.md section 7.
         rng = RNG(base_seed + int(get_current_shot()))
 
         data = array(qubit() for _ in range(comptime(n_data)))
@@ -255,7 +255,7 @@ def build_memory_program(
 
         # Per-round metadata. Under a static schedule dt, p_data and p_read are
         # the same every round, so they are emitted once per shot; t_j = j * dt.
-        # See the output schema in docs/interfaces.md.
+        # See the output schema in docs/stub_arc/interfaces.md.
         output("dt", dt)
         output("p_data", p_data)
         output("p_read", p_read)

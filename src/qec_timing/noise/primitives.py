@@ -4,7 +4,7 @@ All of these take the RNG as a **borrowed** parameter (`rng: RNG`, not
 `rng: RNG @owned`), so a single instance threads through the whole program
 without being consumed. That is required, not stylistic: `RNG(seed)` maps onto
 Selene's global runtime PRNG, so a second instance would reseed the first.
-See `docs/noise_spec.md` section 7.
+See `docs/stub_arc/noise_spec.md` section 7.
 """
 
 from __future__ import annotations
@@ -37,7 +37,7 @@ def apply_data_noise(rng: RNG, data: array[qubit, N], p_data: float) -> None:
     Exactly **one** Bernoulli draw per qubit per round. ``p_data`` already
     combines the idling and measurement-induced mechanisms via Eq. 2; drawing
     once for each and applying X twice would let the flips cancel and give a
-    different channel (see `docs/noise_spec.md` section 3).
+    different channel (see `docs/stub_arc/noise_spec.md` section 3).
     """
     for i in range(N):
         if bernoulli(rng, p_data):

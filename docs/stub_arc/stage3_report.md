@@ -32,7 +32,7 @@ clock only, and each side converts:
 - `noise.params.schedule_data_probabilities(schedule, p)`
 
 A test asserts the two agree on both constant and variable schedules. The
-split is recorded in a table in `docs/interfaces.md`: geometry, scheduling and
+split is recorded in a table in `docs/stub_arc/interfaces.md`: geometry, scheduling and
 the ansatz are shared; the noise equations are not.
 
 | Behaviour | Result |
@@ -62,7 +62,7 @@ in-line and asserts it gives 11.
 and fixed `dt` make them identical in every round. `t_j = j * dt` is
 reconstructed. Read back with `collate_tags()`.
 
-The schema in `docs/interfaces.md` states explicitly that **the `t_j = j * dt`
+The schema in `docs/stub_arc/interfaces.md` states explicitly that **the `t_j = j * dt`
 reconstruction is valid only while `dt` is constant**, and that a stage which
 varies the interval must emit `dt`, `t_j`, `p_data` and `p_read` per round
 instead -- a schema change, not a variant. `RoundSchedule.is_constant` is
@@ -118,8 +118,8 @@ measurements and have been corrected, as agreed:
    workload. RNG draws and gate operations dominate.
 2. *"preferably as sparse indices"* -> **bit-packed**; sparse runs 5-21x above
    the crossover at d = 11 and d = 27 and costs 5.9x packed at d = 27, dt = 10.
-3. The citation pointed at `docs/stage0_report.md`, which does not exist; it now
-   points at `docs/interfaces.md`. No Stage 0 report was backfilled.
+3. The citation pointed at `docs/stub_arc/stage0_report.md`, which does not exist; it now
+   points at `docs/stub_arc/interfaces.md`. No Stage 0 report was backfilled.
 
 ## Files
 
@@ -130,7 +130,7 @@ src/qec_timing/reference/noise.py   Eqs. 1-3 only; re-exports the schedule
 src/qec_timing/noise/params.py      + schedule_data_probabilities
 src/qec_timing/stub_circuit/program.py  + dt argument, + metadata emission
 tests/test_stage3_schedule_metadata.py  19 tests
-docs/interfaces.md               + per-shot output schema, + shared/duplicated table
+docs/stub_arc/interfaces.md               + per-shot output schema, + shared/duplicated table
 ```
 
 ## Open points
@@ -139,7 +139,7 @@ docs/interfaces.md               + per-shot output schema, + shared/duplicated t
    documented as such, but Stage 4's `dt` sweep varies `dt` *between* runs, not
    within one, so this remains valid there. Only a within-run varying `dt`
    forces the change.
-2. `docs/stage1_report.md` and `docs/stage2_report.md` still refer to
+2. `docs/stub_arc/stage1_report.md` and `docs/stub_arc/stage2_report.md` still refer to
    `reference/layout.py`. Left alone deliberately: they are dated records of
    what was done at the time. The living documents -- `noise_spec.md`,
    `interfaces.md`, `CLAUDE.md` -- are current.

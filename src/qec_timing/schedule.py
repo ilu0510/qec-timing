@@ -10,7 +10,7 @@ noise equations are implemented twice on purpose (``noise/params.py`` and
 promoting the schedule to a shared module must not quietly reunify them. Each
 side turns a schedule into probabilities with its own implementation.
 
-The rule this module exists to enforce (CLAUDE.md, docs/noise_spec.md section 5):
+The rule this module exists to enforce (CLAUDE.md, docs/stub_arc/noise_spec.md section 5):
 
 > **Never loop on a float accumulator.** Accumulating ``t += dt`` while ``t < T``
 > silently changes the round count -- with ``dt = 0.1, T = 1.0`` the sum after

@@ -3,7 +3,7 @@
 One test per item (a)-(e) of the Stage 0 brief, plus a statistical test for the
 in-program RNG. Every test uses fixed seeds and is reproducible.
 
-Timings and API notes are recorded in ``docs/interfaces.md``.
+Timings and API notes are recorded in ``docs/stub_arc/interfaces.md``.
 """
 
 import time

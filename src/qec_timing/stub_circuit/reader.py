@@ -1,6 +1,6 @@
 """Decode the detection-event wire formats back into a dense boolean array.
 
-The packed format is the one specified in ``docs/interfaces.md``; the sparse and
+The packed format is the one specified in ``docs/stub_arc/interfaces.md``; the sparse and
 dense readers exist so the three can be compared and benchmarked.
 """
 
@@ -21,7 +21,7 @@ def unpack_packed_words(
 
     Bit ``b`` of word ``w`` is check index ``w * 64 + b``, LSB first; words run
     in ascending order; the final word is zero-padded in its high bits. This is
-    the reference implementation of the snippet in ``docs/interfaces.md``.
+    the reference implementation of the snippet in ``docs/stub_arc/interfaces.md``.
     """
     words = np.asarray(words, dtype=np.uint64)
     if words.ndim == 1:

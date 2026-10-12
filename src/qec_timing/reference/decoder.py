@@ -5,7 +5,7 @@ module defines the contract the reference model decodes against, plus a
 pymatching implementation used for cross-checking. Anything that needs a decoder
 should depend on the ``Decoder`` protocol, never on pymatching directly.
 
-The contract is recorded in ``docs/interfaces.md``.
+The contract is recorded in ``docs/stub_arc/interfaces.md``.
 """
 
 from __future__ import annotations

@@ -10,7 +10,7 @@ in priority order:
 Design choices that keep it cheap:
 
 * **d = 5, 7, 9.** d = 11 was costed at ~74 min on the Guppy path on its own and
-  dropped; d = 5..9 together run in ~25 min. See docs/performance.md.
+  dropped; d = 5..9 together run in ~25 min. See docs/stub_arc/performance.md.
 * **T = 10 for every d.** Chosen so p_L stays unsaturated (~0.03-0.3) at every
   sampled dt, and so the round count at the optimum is ~3d -- matching Appendix
   C's convention and the paper's requirement that T/dt = O(d). Saturation would
@@ -19,7 +19,7 @@ Design choices that keep it cheap:
   agreement and a U-shape.
 * **Shots are sized up front from the ansatz, and each (d, dt) point is a single
   ``run()`` call.** The Guppy path pays ~9.3 s *per call* regardless of shot
-  count (docs/performance.md), so an adaptive sample-until-N-failures loop would
+  count (docs/stub_arc/performance.md), so an adaptive sample-until-N-failures loop would
   waste ~9 s per extra batch. Adaptive sampling is used on the reference path,
   where per-call cost is negligible.
 * **Guppy runs the coarse grid only** (criterion 1). The refined grid used to
@@ -80,7 +80,7 @@ N_REFINED = 9
 TARGET_FAILURES = 100
 MIN_SHOTS, MAX_SHOTS = 150, 20_000
 
-# Guppy cost is unstable to ~3x between runs (docs/performance.md), so the shot
+# Guppy cost is unstable to ~3x between runs (docs/stub_arc/performance.md), so the shot
 # count is additionally capped by a per-point TIME budget. That bounds the total
 # runtime by construction; points where the cap binds simply get wider error
 # bars, which is acceptable here.
@@ -165,7 +165,7 @@ def reference_point(layout, dt, *, target_failures, max_shots, seed_offset=0):
 
 
 def guppy_point(program, layout, dt, shots):
-    """One (d, dt) point in a single run() call -- see docs/performance.md."""
+    """One (d, dt) point in a single run() call -- see docs/stub_arc/performance.md."""
     schedule = constant_schedule(dt=snap(dt), T=T, lam=LAM, tick=TICK)
     params = NoiseParams(p=P, lam=LAM, dt=schedule.dt, b_read=B_READ)
     circuit = build_memory_circuit(

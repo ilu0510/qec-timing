@@ -1,8 +1,8 @@
 # Noise model: summary for the team
 
 Owner: workstream #2 (error models). Status: **validated**. Details in
-`docs/noise_spec.md` (the contract), `docs/interfaces.md` (the wire format),
-`docs/performance.md` (costs), and the per-stage reports.
+`docs/stub_arc/noise_spec.md` (the contract), `docs/stub_arc/interfaces.md` (the wire format),
+`docs/stub_arc/performance.md` (costs), and the per-stage reports.
 
 ## What the model is
 
@@ -70,7 +70,7 @@ bit-packed blocks), `obs` (logical Z parity), plus `dt`, `p_data`, `p_read`,
 
 Detection events are **bit-packed into unsigned 64-bit words**, LSB first,
 ascending word order, final word zero-padded. **Full schema, bit/word order, and
-a copy-paste numpy unpacking snippet are in `docs/interfaces.md`** -- start
+a copy-paste numpy unpacking snippet are in `docs/stub_arc/interfaces.md`** -- start
 there. Note `t_j = j * dt` is only valid while `dt` is constant.
 
 Decoders should depend on the `Decoder` protocol in

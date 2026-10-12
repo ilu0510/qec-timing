@@ -210,10 +210,10 @@ results/stage1/*_run.log                 full console logs
    flips only for the final readout, which keeps total elapsed time exactly
    `sum_j dt_j`. Idling noise is charged once per round.
 3. **Z-sector only**, per Appendix A; the X sector is equivalent under X <-> Z.
-4. `docs/noise_spec.md` is still empty. If it is meant to hold the noise-model
+4. `docs/stub_arc/noise_spec.md` is still empty. If it is meant to hold the noise-model
    contract, the content now lives in `reference/noise.py` docstrings and could
    be lifted across.
 5. The decoder always knows the true noise (the DEM is built from the same
    circuit that is sampled). Appendix A's *believed*-noise path, needed for the
    adaptive controller, is supported by the interface but not yet exercised --
-   see the Decoder section of `docs/interfaces.md`.
+   see the Decoder section of `docs/stub_arc/interfaces.md`.

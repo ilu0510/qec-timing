@@ -8,14 +8,14 @@ docs/paper_equations.md; prefer that file over the PDF text for any formula.
 1. Circuits: rotated surface code syndrome extraction (teammate)
 2. Error models: idle + readout noise (me, this repo's main focus)
 3. Decoding: matching decoder (teammate)
-Interfaces between these live in docs/interfaces.md. Do not change them without asking me.
+Interfaces between these live in docs/stub_arc/interfaces.md. Do not change them without asking me.
 
 ## Two paths: validation vs production (accepted design, Stage 4a)
 The Guppy/Selene path is the VALIDATION path. The pure-Python reference is the PRODUCTION path for
 parameter sweeps. This is a deliberate division of labour, not a shortfall.
 - Selene/Guppy simulates the noise model as it would run on hardware, and is the artefact the physics
   is defined by. It costs ~200x more per syndrome round than the reference (measured; see
-  docs/performance.md), because every Bernoulli draw and gate goes through the emulator runtime.
+  docs/stub_arc/performance.md), because every Bernoulli draw and gate goes through the emulator runtime.
 - The reference (Stim + pymatching) reproduces the same detector stream ~200x faster, and is verified
   against the Guppy path shot-for-shot: identical detector ordering, agreeing logical error rates.
 - Therefore: sweeps that need many shots per point run on the reference. Guppy validates the model at
@@ -24,7 +24,7 @@ parameter sweeps. This is a deliberate division of labour, not a shortfall.
   ever changed, re-run the Stage 4a cross-check before trusting a sweep.
 - Do NOT optimise the Guppy path to close the gap. Geometric-gap sampling for the data noise was
   considered and rejected in Stage 4a: it buys ~1.05x (measured) against a ~10,000x gap and puts a validated noise
-  model at risk. Measured RNG-vs-gate split in docs/performance.md.
+  model at risk. Measured RNG-vs-gate split in docs/stub_arc/performance.md.
 - Guppy pays ~9.3 s PER run() CALL, independent of shot count (1 shot and 8 shots cost the same).
   So: size shots up front and issue ONE run() call per configuration. Never loop run() to accumulate
   statistics -- each extra batch costs another ~9 s. Adaptive sampling belongs on the reference path.
@@ -54,12 +54,12 @@ parameter sweeps. This is a deliberate division of labour, not a shortfall.
 - Fallback if the platform RNG is unsupported: guppylang.std.random.seeded_pcg32 (integers only;
   Bernoulli via next_int_bounded compared against round(p * bound)).
 
-## Selene/Guppy facts (verified in Stage 0, see docs/interfaces.md)
+## Selene/Guppy facts (verified in Stage 0, see docs/stub_arc/interfaces.md)
 - Run: prog.emulator(n_qubits=N).stabilizer_sim().with_shots(K).with_seed(S).run(**args)
 - Emit results with output(tag, value); result() is a deprecated alias. Read with collate_tags(), never as_dict()
   (as_dict drops repeated tags).
 - Reduce in-program: emit detection events (syndrome XOR previous round), BIT-PACKED into 64-bit words
-  (wire format in docs/interfaces.md); never dump raw per-qubit-per-round data at large d. Sparse indices
+  (wire format in docs/stub_arc/interfaces.md); never dump raw per-qubit-per-round data at large d. Sparse indices
   lose: the observed detection rate runs 5-21x above the sparse/packed crossover at both d=11 and d=27,
   and sparse costs 5.9x packed at d=27, dt=10 (Stage 2 benchmark).
 - Emission is NOT the bottleneck once packed: ~3-4% of run time, measured against a no-emission control.
@@ -74,7 +74,7 @@ parameter sweeps. This is a deliberate division of labour, not a shortfall.
 ## Engineering rules
 - Guppy/Selene APIs change quickly. Before using any guppylang or selene-sim function, check it
   exists in the INSTALLED package source (pip show / inspect the site-packages source). Do not rely
-  on memory. Record the versions used in docs/interfaces.md.
+  on memory. Record the versions used in docs/stub_arc/interfaces.md.
 - Use Selene's stabilizer (Stim) simulator backend. Everything is Clifford; d up to 27 is needed.
 - Every stochastic component gets a statistical test: empirical rate within a binomial confidence
   interval of the target, with fixed seeds.

@@ -158,7 +158,7 @@ both across d = 5-9 is a convenience, not a coincidence to rely on at larger d.
 against ~18 min for d = 5-9 together. Dropped as agreed.
 
 **~100 failures per point, capped by time.** Guppy per-round cost is unstable to
-~3x between runs (docs/performance.md), so shots were capped by a **per-point
+~3x between runs (docs/stub_arc/performance.md), so shots were capped by a **per-point
 time budget** of 150 s rather than a shot count -- bounding total runtime by
 construction. The cap bound on 5 of 18 points, all at the expensive small-dt end
 of d = 7 and d = 9, where Guppy statistics fell to 19-36 failures (~17-23% error
@@ -174,7 +174,7 @@ has already established the two agree.
 
 - **`run()` overhead is per call, not per shot** -- 9.3 s fixed, independent of
   shot count. Shots are sized up front and each point is a single call. Full
-  measurement in `docs/performance.md`.
+  measurement in `docs/stub_arc/performance.md`.
 - **Geometric-gap sampling rejected, with the timing split now measured.** RNG
   is only **6-9%** of the per-round cost (a bare Bernoulli draw costs 0.48 us);
   the data-noise draws alone are **4-6%**, so the best case is a **1.04-1.06x**
@@ -191,7 +191,7 @@ results/stage4a/stage4a_points.csv        every sampled point, both paths
 results/stage4a/stage4a.png               p_L vs dt, and 1/dt* vs d
 results/stage4a/seed_sensitivity.json     the three-seed check
 results/stage4a/rng_split.json            measured RNG vs gates
-docs/performance.md                       cost model and the two-path rationale
+docs/stub_arc/performance.md                       cost model and the two-path rationale
 ```
 
 ## Status

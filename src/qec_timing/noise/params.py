@@ -9,7 +9,7 @@ two implementations agree, which catches drift without creating the coupling.
 
 ``exp()`` is not available inside Guppy, so these run in Python and the results
 are passed into the Guppy program as runtime float arguments. See
-``docs/noise_spec.md``.
+``docs/stub_arc/noise_spec.md``.
 """
 
 from __future__ import annotations
@@ -76,7 +76,7 @@ class NoiseParams:
         return read_probability(self.p, self.b_read)
 
     def n_rounds(self, T: float) -> int:
-        """``round(T / dt)`` -- never a float accumulator (docs/noise_spec.md)."""
+        """``round(T / dt)`` -- never a float accumulator (docs/stub_arc/noise_spec.md)."""
         if T <= 0.0:
             raise ValueError(f"T must be positive, got {T}")
         n = round(T / self.dt)
